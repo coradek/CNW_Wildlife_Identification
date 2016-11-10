@@ -155,3 +155,8 @@ class aws(object):
             outf.seek(-1, os.SEEK_END)
             outf.truncate()
             outf.write(']')
+
+
+if __name__ == '__main__':
+
+    pass

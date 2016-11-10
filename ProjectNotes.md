@@ -1,11 +1,24 @@
 # __Contents__
+_Connect to EC2_
 _Expected Workflow_
 _Looping Over Files in Directory_
 _Picture MetaData_
 _Miles' Suggested Process_
 
 <br>
+
+# __Connect to EC2__
+ssh cnw
+(simple, ain't it)
+
+<br>
+
 # __Expected Workflow__
+
+setup.py --> see doc_str
+provide photo source
+creates databases (raw-json, clean-csv, final)
+#### edit to only create essential databases once determined
 
 #### create json database:
   metadata_handler\
