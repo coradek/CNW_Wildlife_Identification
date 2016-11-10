@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import re
+from sys import argv
 
 import metadata_handler as mdh
 
@@ -56,10 +57,14 @@ def process_data(file_name):
     return db
 
 if __name__ == '__main__':
-    # TEST:
-    db = process_data('data/test_DB.json')
-    print db.head(4).T
+    # # TEST:
+    # db = process_data('data/test_DB.json')
+    # print db.head(4).T
 
-    ## for real
-    ## set up args
-    # process_data(argv[1])
+    # for real
+    # set up argv
+    df = process_data(argv[1])
+    df.to_csv(argv[2])
+
+    # for arg in argv:
+    #     print arg

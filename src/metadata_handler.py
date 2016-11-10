@@ -2,6 +2,7 @@ import os
 from glob import glob
 from iptcinfo import IPTCInfo, c_datasets
 import json
+import boto3
 
 
 '''
@@ -49,11 +50,8 @@ def build_dictionary(photo, field_set = None, source = 'local'):
 
     # Fix: file_path not applicable when downloading photo from S3
     if source == 'local':
-        dd['file_path'] = photo
+        dd['photo_address'] = photo
 
-    #FIX: need some way to referance photos on s3
-    if source == 's3':
-        dd['file_path'] = 'THE CLOUD'
     info = IPTCInfo(photo)
     data_dict = dict(info.data)
 
@@ -107,3 +105,53 @@ def build_json_database(directory, f_name):
 # write directly to CSV?
 
 # write to SQL?
+
+class aws(object):
+    """handle metadata for photos stored on S3"""
+    def __init__(self, bucket):
+        self.s3 = boto3.resource('s3')
+        self.client = self.s3.meta.client
+        self.bucket_name = bucket
+        self.photo_bucket = self.s3.Bucket(bucket)
+
+        # this may be a very big list -
+        # better way to get photos?
+        # take 1000 to start
+        # change .limit to .all()
+        self.photo_list = list(self.photo_bucket.objects.limit(200))
+
+        self.photo_address = None
+
+
+    def build_dictionary(self, photo, field_set = None):
+        dd = build_dictionary(photo, field_set = field_set, source = 's3')
+        dd['photo_address'] = self.photo_address
+        return dd
+
+
+    def Mdata_to_json(self, photo, outfile, k):
+        '''Turn metadata python dictionary to json'''
+        ## add error "please specify write ('w')
+        #  or append ('a')" if k is not 'a' or 'w':
+
+        M_dict = self.build_dictionary(photo)
+        with open(outfile, k) as outf:
+            json.dump(M_dict, outf, indent = 4)
+
+
+    def build_json_database(self, f_name):
+        # build in warning incase f_name already exists?
+        with open(f_name,'w') as outf:
+            outf.write('[')
+        for photo in self.photo_list:
+            if photo.key[-4:] == '.JPG':
+                self.photo_address = photo.key
+                self.client.download_file(self.bucket_name, photo.key, 'data/temp_photo.jpg')
+                self.Mdata_to_json('data/temp_photo.jpg', f_name, 'a')
+                with open(f_name,'a') as outf:
+                    outf.write(',')
+                os.remove('data/temp_photo.jpg')
+        with open(f_name,'a') as outf:
+            outf.seek(-1, os.SEEK_END)
+            outf.truncate()
+            outf.write(']')
