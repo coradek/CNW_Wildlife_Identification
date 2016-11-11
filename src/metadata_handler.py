@@ -78,15 +78,21 @@ def Mdata_to_json(photo, outfile, k):
 
 
 
-def build_json_database(directory, f_name):
+def build_json_database(directory, f_name, upload_to = None):
     '''
     Returns json database of metadata for
     all photos the given directory
-    and all of its subdirectories
+    and its subdirectories
+    (optional upload photos and json to aws S3)
     '''
+
+    if upload_to:
+        s3 = boto3.resource('s3')
+        photo_bucket = s3.Bucket(upload_to)
 
     # are nested opens bad?
     # Consider: refactor to avoid nested open statements
+    # ? Do I need to close photo after upload
 
     with open(f_name,'w') as outf:
         outf.write('[')
@@ -94,18 +100,26 @@ def build_json_database(directory, f_name):
         for ff in files:
             if ff[-4:] == '.JPG':
                 Mdata_to_json(p+'/'+ff, f_name, 'a')
+                if upload_to:
+                    photo = open(p+'/'+ff, 'rb')
+                    photo_bucket.put_object(Key=p+'/'+ff, Body=photo)
                 with open(f_name,'a') as outf:
                     outf.write(',')
     with open(f_name,'a') as outf:
         outf.seek(-1, os.SEEK_END)
         outf.truncate()
         outf.write(']')
+    if upload_to:
+        jsonDB = open(f_name, 'rb')
+        photo_bucket.put_object(Key=f_name, Body=jsonDB)
 
 
 # write directly to CSV?
 
 # write to SQL?
 
+
+# This class has adapts the above methods for use with an s3 bucket
 class aws(object):
     """handle metadata for photos stored on S3"""
     def __init__(self, bucket):
@@ -118,8 +132,7 @@ class aws(object):
         # better way to get photos?
         # take 1000 to start
         # change .limit to .all()
-        self.photo_list = list(self.photo_bucket.objects.limit(200))
-
+        self.photo_list = list(self.photo_bucket.objects.all())
         self.photo_address = None
 
 
@@ -155,6 +168,16 @@ class aws(object):
             outf.seek(-1, os.SEEK_END)
             outf.truncate()
             outf.write(']')
+
+    def upload_photos(directory):
+        '''Uploads all .JPG files in directory
+        and its subdirectories '''
+        for p, dirs, files in os.walk(directory):
+            for ff in files:
+                if ff[-4:] == '.JPG':
+                    # Upload a new file
+                    photo = open(p+'/'+ff, 'rb')
+                    my_bucket.put_object(Key=p+'/'+ff, Body=photo)
 
 
 if __name__ == '__main__':

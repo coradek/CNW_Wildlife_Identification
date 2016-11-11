@@ -2,6 +2,7 @@
 _Connect to EC2_
 _Expected Workflow_
 _Looping Over Files in Directory_
+_Setting up EC2_
 _Picture MetaData_
 _Miles' Suggested Process_
 
@@ -46,6 +47,38 @@ for filename in os.listdir('dirname'):
 ```
 ```python
 if not os.path.isfile(filename):
+```
+
+<br>
+
+# __Setting up EC2__
+
+
+set up EC2 through aws web gui:
+
+* Key: Name, Value: <desired name - used to ssh into the EC2 instance>
+
+in iterm:
+```
+$ cd ~/.ssh
+$ atom config
+```
+add:
+```
+# description (e.g. cnw )
+Host <Value from above>
+  HostName <from aws gui>
+  User (e.g. ubuntu)
+  IdentityFile (e.g. ~/.ssh/demo.pem )
+```
+go to anaconda website:
+* copy link from download button
+
+back in iterm
+```
+ssh <name>
+wget (paste link)
+bash . . . (see conda website)
 ```
 
 <br>
