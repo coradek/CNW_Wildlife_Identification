@@ -9,6 +9,7 @@ import metadata_handler as mdh
 Take json file created by metadata_handler
 return cleaned dataframe
 for use in wildlife_id model
+cmd terminal usage: clean_db.py <raw_database.json> <destination.csv>
 '''
 
 def fix_col_names(db):
@@ -50,10 +51,16 @@ def fix_date_and_time(db):
     db.time_created = fix_time(db.time_created)
     return db
 
+# Hard Coded - fix for general purpose model
+def simplify_path(db):
+    db.file_path = db.file_path.str.strip('/Volumes/Seagate Backup Plus Drive/CNWPhotos/')
+    return db
+
 def process_data(file_name):
     db = pd.read_json(file_name)
     db = fix_col_names(db)
     db = fix_date_and_time(db)
+    db = simplify_path(db)
     return db
 
 if __name__ == '__main__':
