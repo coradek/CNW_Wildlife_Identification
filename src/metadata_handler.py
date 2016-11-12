@@ -117,6 +117,8 @@ def build_json_database(directory, f_name, upload_to = None):
             fail_log.write(item+'\n')
 
 
+
+
 # This class has adapts the above methods for use with an s3 bucket
 class aws(object):
     """handle metadata for photos stored on S3"""
@@ -164,17 +166,24 @@ class aws(object):
             outf.truncate()
             outf.write(']')
 
-    def upload_photos(directory):
+    def upload_photos(csv):
         '''Uploads all .JPG files in directory
         and its subdirectories '''
         # Rework to improve file name
-        pass
+
         # for p, dirs, files in os.walk(directory):
         #     for ff in files:
         #         if ff[-4:] == '.JPG':
         #             # Upload a new file
         #             photo = open(p+'/'+ff, 'rb')
         #             my_bucket.put_object(Key=p+'/'+ff, Body=photo)
+
+        df = pandas.read_csv(csv)
+        photo_list = df.file_path
+        for path in photo_list:
+            full_path = '/Volumes/Seagate Backup Plus Drive/CNWPhotos' + path
+            photo = open(full_path, 'rb')
+            my_bucket.put_object(Key=path, Body=photo)
 
 
 if __name__ == '__main__':
