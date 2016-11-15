@@ -89,9 +89,11 @@ def build_json_database(directory, f_name):
     and its subdirectories
     '''
 
-    #FIXME: hacky way to get model_name
-    # will only work when f_name = model_name + '/raw_metadata.json'
-    model_name = f_name.strip('/raw_metadata.json')
+    #FIXME: hacky way to get model_path
+    # will only work when f_name = model_path + 'raw_metadata.json'
+    # which, conveniently, is what happens when using data_pipeline.py
+    model_path = f_name[:-17]
+
 
     # Open json file
     with open(f_name,'w') as outf:
@@ -116,7 +118,7 @@ def build_json_database(directory, f_name):
         outf.truncate()
         outf.write(']')
     print len(failed_list), "photos failed to process"
-    with open('data/'+model_name+'/fail_log.txt', 'w') as fail_log:
+    with open(model_path + 'fail_log.txt', 'w') as fail_log:
         for item in failed_list:
             fail_log.write(item+'\n')
 

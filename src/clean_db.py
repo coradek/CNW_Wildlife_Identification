@@ -57,11 +57,20 @@ def simplify_path(db):
     db.file_path = db.file_path.str.strip('/Volumes/Seagate Backup Plus Drive/CNWPhotos/')
     return db
 
+def add_dummies(db):
+        # get dummies from keywords column
+        db = pd.concat([db, db.keywords.str.join(sep = ' ')\
+                                .str.get_dummies(sep=',')], axis=1)
+        return db
+
+
 def process_data(file_name):
     db = pd.read_json(file_name)
     db = fix_col_names(db)
     db = fix_date_and_time(db)
     db = simplify_path(db)
+    db = add_dummies(db)
+
     return db
 
 def main(raw_json, dest_csv):
