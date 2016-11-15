@@ -1,7 +1,9 @@
 first_sample/
 data/
+metastore_db/
 .ipynb_checkpoints/
 *.pyc
 
+derby.log
 temp_photo.jpg
 create_EC2.ipynb

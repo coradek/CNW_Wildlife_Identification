@@ -51,7 +51,8 @@ def fix_date_and_time(db):
     db.time_created = fix_time(db.time_created)
     return db
 
-# Hard Coded - fix for general purpose model
+# FIXME: Hard Coded - fix for general purpose model
+#  use basename?
 def simplify_path(db):
     db.file_path = db.file_path.str.strip('/Volumes/Seagate Backup Plus Drive/CNWPhotos/')
     return db
@@ -63,15 +64,18 @@ def process_data(file_name):
     db = simplify_path(db)
     return db
 
+def main(raw_json, dest_csv):
+    df = process_data(raw_json)
+    df.to_csv(dest_csv)
+    return df
+
 if __name__ == '__main__':
     # # TEST:
     # db = process_data('data/test_DB.json')
     # print db.head(4).T
 
     # for real
-    # set up argv
-    df = process_data(argv[1])
-    df.to_csv(argv[2])
+    main(argv[1], argv[2])
 
     # for arg in argv:
     #     print arg

@@ -8,22 +8,30 @@ to use from command prompt:
 example: python src/setup.py s3 cnwphotos
     python local my_photos'''
 
-def main():
+def create_dataframe(photo_dir, model_name = 'Wildlife_ID_Model'):
 
-    # Create raw_metadata.json
-    if argv[1] == 's3':
-        MDH = mdh.aws(argv[2])
-        MDH.build_json_database('data/raw_metadata.json')
+    '''Takes a directory of photos. Returns a dataframe of photo metadata.
+    Stores data in raw json and csv form.
+    Usage:
+    df = dpl.create_dataframe(photo_dir, model_name = <desired_model_name>
+    df can then be customized according to the needs of the individual model
+    '''
 
-    if argv[1] == 'local':
-        mdh.build_json_database(argv[2], 'data/raw_metadata.json')
 
-    # Create metadata.csv
-    df = cdb.process_data('data/raw_metadata.json')
-    df.to_csv('data/metadata.csv')
+    #FIXME: check if dir exists - if true, confirm overwrite.
+    #  Add make dir <model_name>
 
-    # Create (the actual df I feed to the CNN)
-    # df = FINAL STEP: run through spark get fully preped dataframe
+    model_path = 'data/' + model_name
+
+    with open(model_path+'/info.txt','w') as outf:
+        outf.write(photo_dir+'\n'+model_path)
+
+    jsonfile = model_path + '/raw_metadata.json'
+    csvfile = model_path + '/metadata.csv'
+    mdh.build_json_database(photo_dir, jsonfile)
+    print '\n',jsonfile,'\n',csvfile,'\n'
+    df = cdb.main(jsonfile, csvfile)
+    return df
 
 
 if __name__ == '__main__':

@@ -81,19 +81,23 @@ def Mdata_to_json(photo, outfile, k, with_comma = False):
             outf.write(',')
 
 # feed metadata into json file
-def build_json_database(directory, f_name, upload_to = None):
+def build_json_database(directory, f_name):
     # build in warning incase f_name already exists?
     '''
     Returns json database of metadata for
-    all photos the given directory
+    all photos in the given directory
     and its subdirectories
-    (optional upload photos and json to aws S3)
     '''
+
+    #FIXME: hacky way to get model_name
+    # will only work when f_name = model_name + '/raw_metadata.json'
+    model_name = f_name.strip('/raw_metadata.json')
 
     # Open json file
     with open(f_name,'w') as outf:
         outf.write('[')
-    # Walk Dir for .jpg files
+
+    # Walk directory for '.jpg' files
     count = 0
     failed_list = []
     for p, dirs, files in os.walk(directory):
@@ -112,14 +116,14 @@ def build_json_database(directory, f_name, upload_to = None):
         outf.truncate()
         outf.write(']')
     print len(failed_list), "photos failed to process"
-    with open('data/fail_log.txt', 'w') as fail_log:
+    with open('data/'+model_name+'/fail_log.txt', 'w') as fail_log:
         for item in failed_list:
             fail_log.write(item+'\n')
 
 
 
-
-# This class has adapts the above methods for use with an s3 bucket
+#INPROGRESS
+# This class has adapts the above methods for use with an s3 bucket and MongoDB for greater scalability and stability
 class aws(object):
     """handle metadata for photos stored on S3"""
     def __init__(self, bucket):
@@ -140,7 +144,8 @@ class aws(object):
         return dd
 
 
-    def Mdata_to_json(self, photo, outfile, k):
+    # Replace with mdata_to_MongoDB
+    def Mdata_to_mongo(self, photo, outfile, k):
         '''Turn metadata python dictionary to json'''
         ## add error "please specify write ('w')
         #  or append ('a')" if k is not 'a' or 'w':
@@ -149,42 +154,22 @@ class aws(object):
             json.dump(M_dict, outf, indent = 4)
 
 
-    def build_json_database(self, f_name):
-        # build in warning incase f_name already exists?
-        with open(f_name,'w') as outf:
-            outf.write('[')
-        for photo in self.photo_list:
-            if photo.key[-4:] == '.JPG':
-                self.photo_address = photo.key
-                self.client.download_file(self.bucket_name, photo.key, 'data/temp_photo.jpg')
-                self.Mdata_to_json('data/temp_photo.jpg', f_name, 'a')
-                with open(f_name,'a') as outf:
-                    outf.write(',')
-                os.remove('data/temp_photo.jpg')
-        with open(f_name,'a') as outf:
-            outf.seek(-1, os.SEEK_END)
-            outf.truncate()
-            outf.write(']')
+    # rework to take advantage of S3
+    # Use MongoDB instead of json for stability
+    def build_mongo_database(self, f_name):
 
-    def upload_photos(csv):
-        '''Uploads all .JPG files in directory
-        and its subdirectories '''
-        # Rework to improve file name
+        pass
 
-        # for p, dirs, files in os.walk(directory):
-        #     for ff in files:
-        #         if ff[-4:] == '.JPG':
-        #             # Upload a new file
-        #             photo = open(p+'/'+ff, 'rb')
-        #             my_bucket.put_object(Key=p+'/'+ff, Body=photo)
 
-        df = pandas.read_csv(csv)
-        photo_list = df.file_path
-        for path in photo_list:
-            full_path = '/Volumes/Seagate Backup Plus Drive/CNWPhotos' + path
-            photo = open(full_path, 'rb')
-            my_bucket.put_object(Key=path, Body=photo)
+    def upload(self, a_file, key = None):
+        '''Uploads files to s3'''
 
+        # Automate transfer of photos to S3
+
+        # currently done outside of python module
+        # through ssh to ec2 instance
+        pass
 
 if __name__ == '__main__':
+
     pass

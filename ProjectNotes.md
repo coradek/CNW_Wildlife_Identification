@@ -1,5 +1,6 @@
 # __Contents__
 _Connect to EC2_
+_Photo to cloud process_
 _Expected Workflow_
 _Looping Over Files in Directory_
 _Setting up EC2_
@@ -7,16 +8,71 @@ _Picture MetaData_
 _Miles' Suggested Process_
 
 <br>
+__TIDBITS:__
+
+filename = os.path.basename('/Volumes/Seagate Backup Plus Drive/CNWPhotos')
+filename --> CNWPhotos
+
+merge folders:
+```
+rsync -av /source/ /destination/
+(after checking)
+rm -rf /source/
+```
+
+<br>
 
 # __Connect to EC2__
-ssh cnw
+
+* describe ssh setup
+`# cnw ec2 instance
+Host <EC2 name>
+  HostName ec2-35-163-162-65.us-west-2.compute.amazonaws.com
+  User ubuntu
+  IdentityFile ~/.ssh/demo.pem`
+
+
+ssh <EC2 name>
 (simple, ain't it)
+
+<br>
+
+# __Photo to cloud process__
+
+set up EC2
+
+zip photos (without parent directory):
+`tar czvf <name of zipped file>.tar.gz -C dir/to/be/zipped .`
+
+create dir for split parts (there will be many)
+`mkdir <split_temp>`
+
+split zipped file and put parts in new dir
+* cd to <split_temp> then:
+`split -b 512m path/to/zipped/file "<prefix for parts>"`
+
+copy all parts to EC2 instance:
+* cd into parts folder <split_temp>
+`scp * <ssh name>:<destination folder>`
+
+### If interupted only the uncopied parts need to be copied
+BETTER than regex:
++ move successfully copied files to different dir
++ repeat `scp * <ssh name>:<destination folder>``
+
+Regex alternative (incomplete - does not take second letter into account)
+```
+scp `find . -regex ".*/cnw_part_[e-z].*"` <ssh name>:<destination folder>
+```
+
+CONSIDER: write script to automate
++ when file copied successfully, move it to 'transferred' folder
 
 <br>
 
 # __Expected Workflow__
 
-setup.py --> see doc_str
+data_pipline.py --> see doc_str
 provide photo source
 creates databases (raw-json, clean-csv, final)
 #### edit to only create essential databases once determined
