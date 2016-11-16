@@ -27,7 +27,7 @@ def create_dataframe(photo_dir, model_name = 'Wildlife_ID_Model'):
     jsonfile = model_path + 'raw_metadata.json'
     csvfile = model_path + 'metadata.csv'
     mdh.build_json_database(photo_dir, jsonfile)
-    print '\n',jsonfile,'\n',csvfile,'\n'
+    print '\n', photo_dir,'\n',jsonfile,'\n',csvfile,'\n'
     df = cdb.main(jsonfile, csvfile)
     return df
 

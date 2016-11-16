@@ -39,6 +39,13 @@ ssh <EC2 name>
 
 # __Photo to cloud process__
 
+use tmux to restart interupted tasks
+`$ tmux`
+* to see tmux sessions:
+`tmux ls`
+* to reattach to tmux sessions
+`tmux attach`
+
 set up EC2
 
 zip photos (without parent directory):
@@ -54,6 +61,14 @@ split zipped file and put parts in new dir
 copy all parts to EC2 instance:
 * cd into parts folder <split_temp>
 `scp * <ssh name>:<destination folder>`
+
+unsplit the pieces
+* create new dir for unsplit file (just to be safe)
+* cd in and use cat to reassemble the pieces
+`cat ../cnw_part_* > cnwphotos.tar.gz`
+
+unzip the photos
+`tar -xvzf <zipped_file>.tar.gz`
 
 ### If interupted only the uncopied parts need to be copied
 BETTER than regex:

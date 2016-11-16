@@ -7,8 +7,8 @@ import metadata_handler as mdh
 
 '''
 Take json file created by metadata_handler
-return cleaned dataframe
-for use in wildlife_id model
+Return cleaned dataframe for use in wildlife_id model
+(cleaned dataframe contains many extra columns - drop as needed in model)
 cmd terminal usage: clean_db.py <raw_database.json> <destination.csv>
 '''
 
@@ -68,7 +68,7 @@ def process_data(file_name):
     db = pd.read_json(file_name)
     db = fix_col_names(db)
     db = fix_date_and_time(db)
-    db = simplify_path(db)
+    # db = simplify_path(db)
     db = add_dummies(db)
 
     return db
