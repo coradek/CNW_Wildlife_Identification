@@ -33,7 +33,7 @@ def get_fields(directory):
     field_set = set()
     for p, dirs, files in os.walk(directory):
         for ff in files:
-            if ff[-4:] == '.JPG':
+            if ff[-4:].upper() == '.JPG':
                 info = IPTCInfo(directory+'/'+ ff)
                 data_dict = dict(info.data)
                 fields = set(data_dict.keys())
@@ -93,7 +93,7 @@ def build_json_database(directory, f_name):
     # will only work when f_name = model_path + 'raw_metadata.json'
     # which, conveniently, is what happens when using data_pipeline.py
     model_path = f_name[:-17]
-    
+
     # Open json file
     with open(f_name,'w') as outf:
         outf.write('[')

@@ -21,7 +21,14 @@ rm -rf /source/
 ```
 
 <br>
+# __Install Tensorflow__
 
+`conda install -c conda-forge tensorflow`
+
+`cd /Users/ophidian/anaconda/lib/python2.7/site-packages/tensorflow/models/image/imagenet python classify_image.py --model_dir TUTORIAL_DIR/imagenet`
+
+
+<br>
 # __Connect to EC2__
 
 * describe ssh setup

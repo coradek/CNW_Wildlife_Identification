@@ -20,8 +20,8 @@ def local_imagenet():
     # Get Imagenet pretrained CNN
     imagenet_model = gl.load_model('https://static.turi.com/products/graphlab-create\
                                             /resources/models/python2.7/imagenet_model_iter45')
-
     pass
+
 
 def balance_deer(SF):
 
@@ -36,6 +36,7 @@ def balance_deer(SF):
     bal_sf = shuffle(bal_sf)
 
     return bal_sf
+
 
 def prepare_dataframe(photo_dir, predict_class, model_name = 'FirstStupidModel'):
 
