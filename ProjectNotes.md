@@ -23,9 +23,15 @@ rm -rf /source/
 <br>
 # __Install Tensorflow__
 
+conda install tensorflow
 `conda install -c conda-forge tensorflow`
 
-`cd /Users/ophidian/anaconda/lib/python2.7/site-packages/tensorflow/models/image/imagenet python classify_image.py --model_dir TUTORIAL_DIR/imagenet`
+cd to imagenet directory
+`cd anaconda/lib/python2.7/site-packages/tensorflow/models/image/imagenet`
+
+run py command
+`python classify_image.py --model_dir <desired model location>/imagenet`
+`python classify_image.py --model_dir ~/coradek/Galvanize_DSI/CNW_Wildlife_Identification/imagenet`
 
 
 <br>

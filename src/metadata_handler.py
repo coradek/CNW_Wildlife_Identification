@@ -50,7 +50,7 @@ def build_dictionary(photo, field_set = None, source = 'local'):
 
     dd = {}
 
-    # Fix: file_path not applicable when downloading photo from S3
+    # FIXME: file_path not applicable when downloading photo from S3
     if source == 'local':
         dd['file_path'] = photo
 

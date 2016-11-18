@@ -51,29 +51,23 @@ def fix_date_and_time(db):
     db.time_created = fix_time(db.time_created)
     return db
 
-# FIXME: Hard Coded - fix for general purpose model
-#  use basename?
-def simplify_path(db):
-    db.file_path = db.file_path.str.strip('/Volumes/Seagate Backup Plus Drive/CNWPhotos/')
-    return db
 
 def add_dummies(db):
-        # get dummies from keywords column
-        db = pd.concat([db, db.keywords.str.join(sep = ' ')\
-                                .str.get_dummies(sep=',')], axis=1)
-        return db
+    # get dummies from keywords column
+    db = pd.concat([db, db.keywords.str.join(sep = ' ')\
+                            .str.get_dummies(sep=',')], axis=1)
+    return db
 
 
 def process_data(file_name):
     db = pd.read_json(file_name)
     db = fix_col_names(db)
     db = fix_date_and_time(db)
-    # db = simplify_path(db)
     db = add_dummies(db)
 
     return db
 
-def main(raw_json, dest_csv):
+def create_csv(raw_json, dest_csv):
     df = process_data(raw_json)
     df.to_csv(dest_csv)
     return df
@@ -84,7 +78,7 @@ if __name__ == '__main__':
     # print db.head(4).T
 
     # for real
-    main(argv[1], argv[2])
+    create_csv(argv[1], argv[2])
 
     # for arg in argv:
     #     print arg
