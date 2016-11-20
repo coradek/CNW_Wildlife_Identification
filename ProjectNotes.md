@@ -6,6 +6,7 @@ _Looping Over Files in Directory_
 _Setting up EC2_
 _Picture MetaData_
 _Miles' Suggested Process_
+_Web app_
 
 <br>
 __TIDBITS:__
@@ -214,3 +215,10 @@ info.exportSQL ?!
 
 ("far beyond techniques being used a few years ago")
 ```
+
+
+# __Web app__
+
+to change background color
+search for #556D89 in grayscale.min.css
+and replace all
