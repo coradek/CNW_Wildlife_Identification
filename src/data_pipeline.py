@@ -29,7 +29,8 @@ def create_dataframe(photo_dir, dataset_name = 'Wildlife_ID_Data'):
     df can then be customized according to the needs of the individual dataset
     '''
 
-    #FIXME: check if dir exists - if true, confirm overwrite.
+    #TODO: check if dir exists - if true, confirm overwrite.
+    #  currently must make dir manually
     #  Add make dir <dataset_name>
 
     path_to = path_dict(dataset_name, photo_dir)
@@ -57,7 +58,8 @@ def path_dict(dataset_name, photo_dir = None):
     dd['dataset'] = _make_path('')
     dd['json'] = _make_path('raw_metadata.json')
     dd['csv'] = _make_path('metadata.csv')
-    dd['features'] = _make_path('features')
+    dd['features'] = _make_path('features.npy')
+    # dd['df_pkl'] = _make_path('DF.pkl')
 
     return dd
 
@@ -77,24 +79,38 @@ def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
     #FIXME: ? is it better to import pandas here and just pass
     #  df.file_path to fe ?
 
-    ftrs = fe.extract_features(df, save_loc = path_to['features'])
+    features = fe.extract_features(df,
+                            save_loc = path_to['features'][:-4])
     print "\ndata pipeline: photo processing complete!\n"
-    return df,ftrs
 
+    df = fe.feature_df(df, features)
+
+    return df
+
+def load_df(dataset_name):
+    path_to = path_dict(dataset_name)
+    df = fe.feature_df(path_to['csv'], path_to['features'])
+    return df
 
 #TODO:  convert dpl to class
 class ImageProcessor(object):
-    """docstring for ."""
+    """docstring for ImageProcessor"""
 
     def __init__(self, photo_dir, dataset_name = 'Wildlife_ID_Data'):
-        self.photo_path = photo_dir
-        self.data_path = _make_path('')
+        self.photos = photo_dir
+        self.dataset = _make_path('')
         self.json = _make_path('raw_metadata.json')
         self.csv = _make_path('metadata.csv')
+        self.features = _make_path('features')
+        self.info = _make_path(info.txt)
 
 
     def _make_path(self, target):
         return "data/{}/{}".format(dataset_name, target)
+
+    def record_info():
+        #TODO: record file structure/location of data for the give IP object
+        pass
 
 
 

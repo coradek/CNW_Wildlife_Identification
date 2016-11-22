@@ -5,6 +5,7 @@ import tensorflow.python.platform
 from tensorflow.python.platform import gfile
 import numpy as np
 import pandas as pd
+import cPickle as pickle
 
 """Credit: KERNIX blog - Image classification with a pre-trained deep neural network"""
 
@@ -19,7 +20,7 @@ def create_graph():
 
 def extract_features(in_item, save_loc = None):
     '''take list of image file paths or pandas df with file_path column
-    return numpy array of features
+    return pandas series of features
     (optional save as .npy file to save_loc)'''
 
         # TODO: improve saving
@@ -57,5 +58,30 @@ def extract_features(in_item, save_loc = None):
                                 {'DecodeJpeg/contents:0': image_data})
             features[ind,:] = np.squeeze(predictions)
 
-    if save_loc: np.save('data/FSM2_iter1/features', features)
+    if save_loc: np.save(save_loc, features)
     return features
+
+def feature_df(df, arr):
+    # take path or df/np.array object
+    # return df with features column attached
+
+    if type(arr) == str:
+        ftrs = np.load(arr)
+    else:
+        ftrs = arr
+
+    if type(df) == str:
+        metadata_df = pd.read_csv(df)
+
+    else:
+        metadata_df = df
+
+    df = pd.DataFrame(ftrs)
+    df['keywords'] = metadata_df.keywords
+    df['file_path'] = metadata_df.file_path
+
+    #attempted to store feature vectors in one column: ABORT!
+    # ftr_df = pd.DataFrame({'features':list(ftrs)})
+    # df = pd.concat([df, ftr_df], axis = 1)
+
+    return df
