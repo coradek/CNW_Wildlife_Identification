@@ -61,6 +61,8 @@ def extract_features(in_item, save_loc = None):
     if save_loc: np.save(save_loc, features)
     return features
 
+
+#TODO: still needed?
 def feature_df(df, arr):
     # take path or df/np.array object
     # return df with features column attached
@@ -72,16 +74,11 @@ def feature_df(df, arr):
 
     if type(df) == str:
         metadata_df = pd.read_csv(df)
-
     else:
         metadata_df = df
 
     df = pd.DataFrame(ftrs)
     df['keywords'] = metadata_df.keywords
     df['file_path'] = metadata_df.file_path
-
-    #attempted to store feature vectors in one column: ABORT!
-    # ftr_df = pd.DataFrame({'features':list(ftrs)})
-    # df = pd.concat([df, ftr_df], axis = 1)
 
     return df

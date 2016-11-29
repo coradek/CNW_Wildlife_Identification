@@ -21,16 +21,17 @@ def prep_data(dataset, drop_hare = True, drop_blank = False):
 
     # choose the parts I need
     d1 = {'Ungulate':["[u'mule deer']", "[u'White-tailed deer']", "[u'elk']"],
-          'Feline':["[u'bobcat']", "[u'Canada lynx']", "[u'cougar']"],
+          'Feline':["[u'bobcat']", "[u'Canada lynx']",
+                    "[u'cougar']", "[u'mountain lion']"],
           'Hare':["[u'snowshoe hare']"],
           'Canine':["[u'coyote']", "[u'domestic dog']"],
           'Small': ["[u'mouse']", "[u'red squirrel']", "[u'Robin']",
                      "[u'bird']", "[u'northern flying squirrel']",
                      "[u'Squirrel (unidentified)']",
                      "[u'chipmunk']", "[u'Squirrel']"],
-          'Other':["[u'unidentified']", "[u'Camera Check']",
-                     "[u'hoary marmot']", "[u'striped skunk']",
-                     "[u'Wolverine']","[]"]}
+          'Other':["[u'unidentified']", "[u'Camera Check']","[u'sheep']",
+                     "[u'hoary marmot']", "[u'striped skunk']", "[u'skunk']",
+                     "[u'Wolverine']","[]", "[u'human']", "[u'Black Bear']"]}
 
     d2 = {}
     for key,value in d1.iteritems():
@@ -40,11 +41,12 @@ def prep_data(dataset, drop_hare = True, drop_blank = False):
     print "Keyword Value Counts: \n",df.keywords.value_counts()
 
     # Check for blank keywords, drop if desired
-    blank_count = df.keywords.value_counts()["[]"]
-    print '\n{} photos have a blank keyword entries'.format(blank_count)
-    if drop_blank:
-        print "dropping blank\n"
-        df = df[(df.keywords != "[]").values]
+    if "[]" in df.keywords.unique():
+        blank_count = df.keywords.value_counts()["[]"]
+        print '\n{} photos have a blank keyword entries'.format(blank_count)
+        if drop_blank:
+            print "dropping blank\n"
+            df = df[(df.keywords != "[]").values]
 
     # display missed labels and drop
     labels = df['keywords'].map(d2)
@@ -59,11 +61,12 @@ def prep_data(dataset, drop_hare = True, drop_blank = False):
     paths = df.file_path
 
     if drop_hare:
-        print 'dropping "Hare" for balance'
+        print '\ndropping "Hare" for balance'
         features = features[(labels != 'Hare').values]
         paths = df.file_path[(labels != 'Hare').values]
         labels = labels[labels!='Hare']
 
+    print "\nFinal Group Count\n", labels.value_counts()
     return features, labels, paths
 
 #create SVC model
@@ -92,8 +95,9 @@ def create_RF():
 
 # Train model, return model, prediction, probs
 #  and unused portion of dataset
-def run_fit(model, X, y):
-    X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=42)
+def run_fit(model, X, y, test_size = 0.2):
+    X_train, X_test, y_train, y_test = train_test_split(X,y,
+                                test_size=test_size, random_state=None)
     model = model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     y_prob = model.predict_proba(X_test)

@@ -223,3 +223,13 @@ info.exportSQL ?!
 to change background color
 search for #556D89 in grayscale.min.css
 and replace all
+
+web app structure
+* run creategraph and tf.sess persist
+* user upload photo
+* save temp
+* filepath (list?) to wp
+* get prediction
+* get strengths
+* get plot
+( in ajax :/ )
