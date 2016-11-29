@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request
 from werkzeug import secure_filename
+import web_predictor as wp
+
 
 app = Flask(__name__)
 
 # This is the path to the upload directory
-app.config['UPLOAD_FOLDER'] = 'app/tmp/'
+app.config['UPLOAD_FOLDER'] = 'tmp/'
 # These are the extension that we are accepting to be uploaded
-app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'jpeg', 'JPG'])
+app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'JPG'])
 
 
 # home page
@@ -39,13 +41,29 @@ def upload():
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
-   if request.method == 'POST':
-      f = request.files['file']
-      f.save('tmp/'+secure_filename(f.filename))
-      return 'file uploaded successfully'
+    if request.method == 'POST':
+        f = request.files['file']
+        photo_name = 'tmp/'+secure_filename(f.filename)
+        photo = 'app/static/'+photo_name
+        f.save(photo)
+        plot_name = photo_name[:-4]+'_plot'
+        plot = 'app/static/'+plot_name
+        print plot
+        print "\nGot to before the web predictor"
+        result = wp.primary(photo, session, tensor, plot)
+
+        print "\nGot to after the web predictor"
+
+        #TODO: return 'result' and display in html someplace
+        return render_template('results.html', photo = photo_name, plot = plot_name+'.png')
 
 
 
 if __name__ == '__main__':
 
+    print "\ncommencing tensorflow setup\n"
+    session, tensor = wp.setup()
+    print "setup complete - running test prediction\n"
+    result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
+    print "test prediction complete - starting app.py\n"
     app.run(host='0.0.0.0', port=8080, debug=True)

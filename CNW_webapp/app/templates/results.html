@@ -1,0 +1,27 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Predition Results</title>
+  <meta name="description" content="random stuff">
+  <meta name="author" content="Galvanize DSI">
+
+</head>
+
+<body>
+
+    <h1>The results page!</h1>
+    <br>
+    <p>You uploaded this photo:</p>
+
+    <div>
+      <img src={{url_for('static', filename = photo)}} alt="photo" style="width:304px;height:228px;">
+    </div>
+    <br>
+    <p>We predict:</p>
+    <div>
+      <img src={{url_for('static', filename = plot)}} alt="plot" style="width:304px;height:171px;">
+    </div>
+
+</break>
+</html>
