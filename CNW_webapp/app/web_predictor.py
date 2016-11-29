@@ -6,6 +6,8 @@ from tensorflow.python.platform import gfile
 import numpy as np
 import pandas as pd
 import cPickle as pickle
+import matplotlib as mpl
+mpl.use("Agg")
 import matplotlib.pyplot as plt
 
 
