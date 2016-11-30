@@ -12,8 +12,9 @@ Return cleaned dataframe for use in wildlife_id model
 cmd terminal usage: clean_db.py <raw_database.json> <destination.csv>
 '''
 
+# Remove " ", "-", "/" from colunm names
 def fix_col_names(db):
-    '''Remove " ", "-", "/" from colunm names'''
+
     dd = {}
     for col in db.columns:
         new_col = col
@@ -26,7 +27,7 @@ def fix_col_names(db):
     return db
 
 def _fix_date(date):
-    # remove decimal?
+    #TODO: not working as intended
     date = str(date)
     if date == 'nan':
         return None
@@ -34,7 +35,7 @@ def _fix_date(date):
         return re.sub('(....)(..)(..)(..)', '\\1-\\2-\\3', date)
 
 def _fix_time(time):
-    # remove decimal?
+    #TODO: not working as intended
     time = str(time)
     if time == 'nan':
         return None
@@ -43,6 +44,8 @@ def _fix_time(time):
     else:
         return re.sub('(..)(..)(..)(..)', '\\1:\\2:\\3', time)
 
+
+# vectorize above methods for better parallelization
 def fix_date_and_time(db):
     fix_date = np.vectorize(_fix_date)
     fix_time = np.vectorize(_fix_time)
@@ -52,8 +55,8 @@ def fix_date_and_time(db):
     return db
 
 
+#  add dummies from keywords column
 def add_dummies(db):
-    # get dummies from keywords column
     db = pd.concat([db, db.keywords.str.join(sep = ' ')\
                             .str.get_dummies(sep=',')], axis=1)
     return db
@@ -73,12 +76,5 @@ def create_csv(raw_json, dest_csv):
     return df
 
 if __name__ == '__main__':
-    # # TEST:
-    # db = process_data('data/test_DB.json')
-    # print db.head(4).T
 
-    # for real
     create_csv(argv[1], argv[2])
-
-    # for arg in argv:
-    #     print arg

@@ -80,7 +80,7 @@ def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
     df = create_dataframe(photo_dir, dataset_name = dataset_name)
     print "\ndata pipeline: extracting features . . .\n"
 
-    #FIXME: ? is it better to import pandas here and just pass
+    #TODO: ? is it better to import pandas here and just pass
     #  df.file_path to fe ?
 
     features = fe.extract_features(df,
