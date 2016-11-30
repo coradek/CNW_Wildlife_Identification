@@ -11,8 +11,9 @@ from sklearn.model_selection import cross_val_score
 import src.data_pipeline as dpl
 
 
+# confusion matrix report
 def cm_report(L, y_test, y_pred):
-    '''confusion matrix report'''
+
     groups = sorted(L.value_counts().index)
     cm = confusion_matrix(y_test,y_pred, labels = groups)
     alphabetized_counts = np.array([[y_test.value_counts().get(group, default = 0) for group in groups]])
@@ -25,7 +26,7 @@ def cm_report(L, y_test, y_pred):
     print "\nTest set value counts:\n",y_test.value_counts()
     print "\n"
     for i, grp in enumerate(groups):
-        print grp # , cm[i]
+        print grp
     print '\nTest Confusion Matrix:\n', cm
     print '\nPercentage True in each predicted class\n', percent_matrix
     print '\n'
@@ -73,8 +74,9 @@ def plot_probs(probs, save_as = None):
 
     plt.show()
     return to_plot
-    
 
+
+# plot confusion matrix or percentage matrix
 def plot_matrix(matrix, y_test, y_pred, save_as = None):
 
     true_labels = np.unique(y_test)

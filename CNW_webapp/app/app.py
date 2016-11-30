@@ -52,8 +52,12 @@ session, tensor = wp.setup()
 print "setup complete - running test prediction\n"
 result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
 
+print "\ncommencing tensorflow setup\n"
+session, tensor = wp.setup()
+print "setup complete - running test prediction\n"
+result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
+print "test prediction complete"
 
 if __name__ == '__main__':
 
-    print "test prediction complete - starting app.py\n"
     app.run(host='0.0.0.0', port=8080, debug=True)
