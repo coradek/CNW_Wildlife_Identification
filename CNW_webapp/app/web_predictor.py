@@ -16,6 +16,7 @@ Usage: run setup() globaly
 then run primary() for each img individually
 '''
 
+# Create tensorflow graph
 def create_graph():
     model_dir = '../imagenet'
 
@@ -25,7 +26,7 @@ def create_graph():
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
 
-
+# Setup TensorFlow graph and session to avoid overhead on each photo
 def setup():
     create_graph()
 
@@ -33,40 +34,12 @@ def setup():
 
         next_to_last_tensor = sess.graph.get_tensor_by_name('pool_3:0')
 
-        s = sess
-        t = next_to_last_tensor
+        session = sess
+        tensor = next_to_last_tensor
 
-        return s,t
+        return session, tensor
 
-
-# def extract_features(list_images):
-#     '''take list of image file paths
-#     return pandas series of features
-#     '''
-#
-#     nb_features = 2048
-#     features = np.empty((len(list_images),nb_features))
-#
-#     create_graph()
-#
-#     with tf.Session() as sess:
-#
-#         next_to_last_tensor = sess.graph.get_tensor_by_name('pool_3:0')
-#
-#         for ind, image in enumerate(list_images):
-#
-#             if not gfile.Exists(image):
-#                 tf.logging.fatal('File does not exist %s', image)
-#
-#             image_data = gfile.FastGFile(image, 'rb').read()
-#
-#             predictions = sess.run(next_to_last_tensor,
-#                                 {'DecodeJpeg/contents:0': image_data})
-#             features[ind,:] = np.squeeze(predictions)
-#
-#     return features
-
-
+# Return Feature Vector formatted for use in Predict
 def get_features(image, sess, next_to_last_tensor):
     if not gfile.Exists(image):
         tf.logging.fatal('File does not exist %s', image)
@@ -83,7 +56,7 @@ def get_features(image, sess, next_to_last_tensor):
 def predict(feat, model = 'current_model'):
 
     # make predition from single feature vector
-
+    print "Got into predict"
     with open(model, 'rb') as fh:
         model = pickle.load(fh)
 

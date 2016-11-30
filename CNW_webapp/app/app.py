@@ -14,7 +14,6 @@ app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'JPG'])
 # home page
 @app.route('/')
 def index():
-    # return render_template('my_index.html')
     return render_template('index.html')
 
 # Submit page
@@ -23,22 +22,12 @@ def submit():
     return render_template('submit.html')
 
 
-# Predict page
-@app.route('/predict', methods = ['POST'])
-def predict():
-
-    doc = str(request.form['user_input'])
-
-    X = vectorizer.transform([doc])
-    pred = model.predict(X)
-    return render_template('predict.html', result = pred[0])
-
-
+# Upload page
 @app.route('/upload')
 def upload():
     return render_template('upload.html')
 
-
+# Process photo and show Result page
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -48,22 +37,23 @@ def upload_file():
         f.save(photo)
         plot_name = photo_name[:-4]+'_plot'
         plot = 'app/static/'+plot_name
+
         print plot
         print "\nGot to before the web predictor"
+
         result = wp.primary(photo, session, tensor, plot)
 
         print "\nGot to after the web predictor"
 
-        #TODO: return 'result' and display in html someplace
         return render_template('results.html', photo = photo_name, plot = plot_name+'.png')
 
+print "\ncommencing tensorflow setup\n"
+session, tensor = wp.setup()
+print "setup complete - running test prediction\n"
+result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
 
 
 if __name__ == '__main__':
 
-    print "\ncommencing tensorflow setup\n"
-    session, tensor = wp.setup()
-    print "setup complete - running test prediction\n"
-    result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
     print "test prediction complete - starting app.py\n"
     app.run(host='0.0.0.0', port=8080, debug=True)
