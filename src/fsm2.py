@@ -3,23 +3,31 @@ import numpy as np
 import pandas as pd
 
 import sklearn
-# from sklearn import cross_validation
-# from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.svm import SVC, LinearSVC
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 
 import src.data_pipeline as dpl
 
-#TODO: this needs to take features and create a model
-#  the model needs to be pickled (and saved as current_model)
-#  this will then be used by predict_one.py
+'''
+fsm: first silly model
+sorts keyword labels into categories
+and builds model using tensorflow inception-v3 features
+
+Usage:
+features, labels, paths = prep_data('name_of_dataset')
+svm = create_SVC()
+model, X_test, y_test, y_pred, y_prob = fsm.run_fit(svm,
+                                        features, labels,
+                                        test_size = .4)
+save_model(model, 'data/my_svm')
+'''
 
 def prep_data(dataset, drop_hare = True, drop_blank = False):
     # open dataframe of labels and features
     df = dpl.load_df(dataset)
 
-    # choose the parts I need
+    # build categories
     d1 = {'Ungulate':["[u'mule deer']", "[u'White-tailed deer']", "[u'elk']"],
           'Feline':["[u'bobcat']", "[u'Canada lynx']",
                     "[u'cougar']", "[u'mountain lion']"],
@@ -60,6 +68,8 @@ def prep_data(dataset, drop_hare = True, drop_blank = False):
     features = df.drop(['keywords', 'file_path'], axis = 1)
     paths = df.file_path
 
+    # hares are often unbalanced and difficult to detect
+    # - drop if necessary
     if drop_hare:
         print '\ndropping "Hare" for balance'
         features = features[(labels != 'Hare').values]
@@ -71,10 +81,12 @@ def prep_data(dataset, drop_hare = True, drop_blank = False):
 
 #create SVC model
 def create_SVC():
-#     svm = LinearSVC(C=1.0, loss='squared_hinge', penalty='l2',multi_class='ovr')
-    svm = SVC(C=1.0, kernel='linear', degree=3, gamma='auto', coef0=0.0, shrinking=True,
-              probability=True, tol=0.001, cache_size=200, class_weight=None,
-              verbose=False, max_iter=-1, decision_function_shape='ovr', random_state=None)
+
+    svm = SVC(C=1.0, kernel='linear', degree=3, gamma='auto',
+                 coef0=0.0, shrinking=True, probability=True,
+                 tol=0.001, cache_size=200, class_weight=None,
+                 verbose=False, max_iter=-1,
+                 decision_function_shape='ovr', random_state=None)
 
     return svm
 
@@ -93,7 +105,7 @@ def create_RF():
     return rf
 
 
-# Train model, return model, prediction, probs
+# Train model. return model, prediction, probs
 #  and unused portion of dataset
 def run_fit(model, X, y, test_size = 0.2):
     X_train, X_test, y_train, y_test = train_test_split(X,y,

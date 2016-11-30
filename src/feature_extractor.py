@@ -62,7 +62,8 @@ def extract_features(in_item, save_loc = None):
     return features
 
 
-#TODO: still needed?
+# create df with tensorflow features, keywords, and file paths
+# for use in data_pipline.load_df()
 def feature_df(df, arr):
     # take path or df/np.array object
     # return df with features column attached

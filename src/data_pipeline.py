@@ -1,9 +1,10 @@
 from sys import argv
+from os.path import isdir
+from os import makedirs
 
 import metadata_handler as mdh
 import clean_db as cdb
 import feature_extractor as fe
-
 
 
 ''' takes directory of images (and optional dataset name)
@@ -28,10 +29,6 @@ def create_dataframe(photo_dir, dataset_name = 'Wildlife_ID_Data'):
     df = dpl.create_dataframe(photo_dir, dataset_name = <desired_dataset_name>)
     df can then be customized according to the needs of the individual dataset
     '''
-
-    #TODO: check if dir exists - if true, confirm overwrite.
-    #  currently must make dir manually
-    #  Add make dir <dataset_name>
 
     path_to = path_dict(dataset_name, photo_dir)
     data_path = path_to['dataset']
@@ -59,16 +56,23 @@ def path_dict(dataset_name, photo_dir = None):
     dd['json'] = _make_path('raw_metadata.json')
     dd['csv'] = _make_path('metadata.csv')
     dd['features'] = _make_path('features.npy')
-    # dd['df_pkl'] = _make_path('DF.pkl')
 
     return dd
 
 
 def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
-    # TODO:
-    # check for dir -
-    # create dir
-    # (make sure its all saved someplace)
+
+    if isdir('data/'+dataset_name):
+        response = raw_input('This data set already exists. Overwrite? [yes/no]')
+        if response.lower() == 'no':
+            return
+        elif response.lower() == 'yes':
+            pass
+        else:
+            print 'yes or no required - aborting'
+            return
+    else:
+        makedirs('data/'+dataset_name)
 
     path_to = path_dict(dataset_name, photo_dir)
 
@@ -85,12 +89,15 @@ def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
 
     df = fe.feature_df(df, features)
 
-    return df
+    # return df
 
+
+# loads a dataframe with only
 def load_df(dataset_name):
     path_to = path_dict(dataset_name)
     df = fe.feature_df(path_to['csv'], path_to['features'])
     return df
+
 
 #TODO:  convert dpl to class
 class ImageProcessor(object):

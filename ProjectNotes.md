@@ -224,12 +224,19 @@ to change background color
 search for #556D89 in grayscale.min.css
 and replace all
 
-web app structure
-* run creategraph and tf.sess persist
-* user upload photo
-* save temp
-* filepath (list?) to wp
-* get prediction
-* get strengths
-* get plot
-( in ajax :/ )
+FOR EC2
+
+* install tensorflow
+`conda install -c conda-forge tensorflow`
+* fix matplotlib
+  `conda install PyQt=4`
+  * alter matplotlib import: add the following lines above the import statement for matplotlib.pyplot
+  ```
+  import matplotlib as mpl
+  mpl.use("Agg")
+  ```
+
+Setup DNS (www.evanadkins.tech)
+https://www.hover.com/domain/evanadkins.tech/dns
+change @ record to my EC2 elastic IP
+make new record www with my EC2 elastic IP
