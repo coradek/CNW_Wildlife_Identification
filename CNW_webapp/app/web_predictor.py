@@ -41,14 +41,18 @@ def setup():
 
 # Return Feature Vector formatted for use in Predict
 def get_features(image, sess, next_to_last_tensor):
+    print "in get_features"
     if not gfile.Exists(image):
         tf.logging.fatal('File does not exist %s', image)
 
     image_data = gfile.FastGFile(image, 'rb').read()
 
+    print "image data successfully read in"
     predictions = sess.run(next_to_last_tensor,
                         {'DecodeJpeg/contents:0': image_data})
+    print "prediction made"
     features = np.squeeze(predictions)
+    print "features calculated"
     return features.reshape(1,-1)
 
 
@@ -103,10 +107,15 @@ def plot_pred(prediction, to_plot, save_as = None):
 
 
 def primary(image, session, tensor, plt_name):
+    print "inside primary"
     x = get_features(image, session, tensor)
+    print "got features"
     pred = predict(x)
+    print "made prediction"
     result = result_array(pred)
+    print "result recieved"
     plot_pred(pred, result, save_as = plt_name)
+    print "plot created and saved"
     return result
 
 

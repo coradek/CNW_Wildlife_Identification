@@ -47,15 +47,11 @@ def upload_file():
 
         return render_template('results.html', photo = photo_name, plot = plot_name+'.png')
 
-print "\ncommencing tensorflow setup\n"
-session, tensor = wp.setup()
-print "setup complete - running test prediction\n"
-result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
 
 print "\ncommencing tensorflow setup\n"
 session, tensor = wp.setup()
 print "setup complete - running test prediction\n"
-result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'wptest')
+result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'app/static/tmp/wptest')
 print "test prediction complete"
 
 if __name__ == '__main__':
