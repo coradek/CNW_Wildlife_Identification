@@ -27,6 +27,7 @@ def submit():
 def upload():
     return render_template('upload.html')
 
+
 # Process photo and show Result page
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
@@ -37,26 +38,17 @@ def upload_file():
         f.save(photo)
         plot_name = photo_name[:-4]+'_plot'
         plot = 'app/static/'+plot_name
+        print "\n plot will be saved to", plot
 
-        print plot
-        print "\nGot to before the web predictor"
-
-        # session, tensor = wp.setup()
-        # print "wp.setup complete"
         result = wp.primary(photo, session, tensor, plot)
 
-        print "\nGot to after the web predictor"
+        return render_template('results.html', photo = photo_name,
+                                plot = plot_name+'.png')
 
-        return render_template('results.html', photo = photo_name, plot = plot_name+'.png')
-
-
-print "\ncommencing tensorflow setup\n"
+# set session and tensor globally to save overhead
 session, tensor = wp.setup()
-print "setup complete - running test prediction\n"
 result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'app/static/tmp/wptest')
-print "first test prediction complete"
-result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'app/static/tmp/wptest')
-print "second test prediction complete"
+
 
 if __name__ == '__main__':
 
