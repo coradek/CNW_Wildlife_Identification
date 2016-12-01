@@ -41,6 +41,8 @@ def upload_file():
         print plot
         print "\nGot to before the web predictor"
 
+        # session, tensor = wp.setup()
+        # print "wp.setup complete"
         result = wp.primary(photo, session, tensor, plot)
 
         print "\nGot to after the web predictor"
@@ -52,7 +54,9 @@ print "\ncommencing tensorflow setup\n"
 session, tensor = wp.setup()
 print "setup complete - running test prediction\n"
 result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'app/static/tmp/wptest')
-print "test prediction complete"
+print "first test prediction complete"
+result = wp.primary('app/static/tmp/bunny.JPG', session, tensor, 'app/static/tmp/wptest')
+print "second test prediction complete"
 
 if __name__ == '__main__':
 

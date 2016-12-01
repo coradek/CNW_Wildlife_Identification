@@ -4,6 +4,10 @@ metastore_db/
 .ipynb_checkpoints/
 *.pyc
 
+CNW_webapp/app/static/img/
+CNW_webapp/app/static/tmp/
+! CNW_webapp/app/static/tmp/bunny.JPG
+
 derby.log
 temp_photo.jpg
 create_EC2.ipynb
