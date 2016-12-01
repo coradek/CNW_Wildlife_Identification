@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 
 '''
+web_predictor
 Usage: run setup() globaly
 then run primary() for each img individually
 '''
@@ -41,15 +42,20 @@ def setup():
 
 # Return Feature Vector formatted for use in Predict
 def get_features(image, sess, next_to_last_tensor):
-    print "in get_features"
+    print "in web_pred get_features"
     if not gfile.Exists(image):
         tf.logging.fatal('File does not exist %s', image)
 
     image_data = gfile.FastGFile(image, 'rb').read()
 
-    print "image data successfully read in"
-    predictions = sess.run(next_to_last_tensor,
+    print "session test (type should show): ", type(sess)
+    print "tensor test (type should show): ", type(next_to_last_tensor)
+    print "image test (PIC...60 size = 898240): ", os.stat(image).st_size
+    try:
+        predictions = sess.run(next_to_last_tensor,
                         {'DecodeJpeg/contents:0': image_data})
+    except:
+        print "TF is hving issues"
     print "prediction made"
     features = np.squeeze(predictions)
     print "features calculated"
@@ -60,7 +66,7 @@ def get_features(image, sess, next_to_last_tensor):
 def predict(feat, model = 'current_model'):
 
     # make predition from single feature vector
-    print "Got into predict"
+    print "Got into web_pred predict"
     with open(model, 'rb') as fh:
         model = pickle.load(fh)
 
