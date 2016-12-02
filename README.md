@@ -2,16 +2,16 @@
 
 This project aims to classify wildlife in images from the Conservation Northwest Wildlife Monitoring Project. The classification model will generate a vector of image features through a pre-trained convolutional neural network and then classify these vectors with a support vector machine.
 
-## __Business Understanding:__
+## __Project Context:__
 Conservation Northwest (CNW) is a non-profit land conservation organization dedicated to protecting and conserving wild lands from the Washington Coast to the BC Rockies. One of CNW's ongoing efforts is the Citizen Wildlife Monitoring Project (CWMP), organizing citizen-scientist volunteers to monitor and document wildlife using remote cameras where state and federal agencies do not have the resources to go.
 The CWMP is now in its tenth year. The project depends largely on volunteers, not only to maintain and monitor the cameras, but also to manually sort and categorize hundreds of thousands of resulting photos - many of which do not contain any animal and must be removed from the database.
 Image recognition, and machine learning technologies provide a significant opportunity for streamlining volunteer efforts and improving the consistency of the resultant data. Images from 2015 and 2014 have already been categorized by hand, and are available for use in model training. Images from seven previous years (2007 - 2013) and from the current field season (2016) have yet to be analyzed, so an automated system would be of immediate benefit to the organization.
-The ideal system would automate three tasks
+The ideal system will automate three tasks
 - Remove of 'False Triggers' - images with no animal.
 - Group photos into ‘Events' - multiple images of the same animal around the same time
 - Identify which species are present in each photo.
 
-This project starts with the identification of species because false triggers have already been removed from the initial dataset manually, and event classification data is not included in the initial dataset.
+This project begins with the identification of species because false triggers have already been removed from the initial dataset manually, and event classification data is not included in the initial dataset.
 
 <br>
 
@@ -56,6 +56,6 @@ I expect that taking backgrounds into account through motion capture will help s
 
 ## __Deployment__
 
-Checkout the Web App below! This app allows the user to upload a photo and receive a prediction from the model. Because your photos are likely not from the same location, the results are often entertaining!
+Checkout the Web App at [evanadkins.tech](www.evanadkins.tech)! This app allows the user to upload a photo and receive a prediction from the model. Because your photos are likely not from the same location, the results are often entertaining!
 
-The eventual plan is to build this system into an app that will allow volunteers with CWMP to upload and entire directory and receive predictions. Predictions could then be used to flag false triggers, and suggest event grouping. 
+The eventual plan is to build this system into an app that will allow volunteers with CWMP to upload and entire directory and receive predictions. Predictions could then be used to flag false triggers, and suggest event grouping.
