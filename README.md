@@ -17,7 +17,7 @@ This project begins with the identification of species because false triggers ha
 
 ## __The Data__
 
-An extensive set of photographs is available for analysis: ~120000 images from 2015 alone. Verified species information is included in the metadata associated with each image, making Species Identification a convenient starting point for this project.
+An extensive set of photographs is available for analysis: ~120,000 images from 2015 alone. Verified species information is included in the metadata associated with each image, making Species Identification a convenient starting point for this project.
 The primary information used for prediction is the photographs themselves. The cameras used in the wildlife monitoring project take three photos consecutively each time they are triggered. Therefore timestamps and adjacent photos (or their predicted classifications) may also provide useful information to a machine learning model.
 False triggers have already been removed from the data set, and retrieving event classification information has proven technically challenging. These directions are better suited to a longer project and may require minor changes to the CWMP protocol in order to make modeling more feasible.
 Data preparation required some effort. Directory naming across the 2015 image set is somewhat inconsistent and there are occasional duplicate photos either in differently named directories, or in the same directory with different names (e.g. 'img401' and 'img401 (2)'). Metadata also needed to be separated from the images and formatted into an appropriate data structure.
