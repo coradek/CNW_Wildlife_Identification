@@ -59,19 +59,27 @@ def path_dict(dataset_name, photo_dir = None):
 
     return dd
 
+def confirm_overwrite(path):
+    response = raw_input('This data set already exists. Overwrite? [yes/no] ')
+    if response.lower() == 'no':
+        return False
+    elif response.lower() == 'yes':
+        return True
+    else:
+        print 'please type "yes" or "no"'
+        return confirm_overwrite(path)
+
 
 def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
 
     if isdir('data/'+dataset_name):
-        response = raw_input('This data set already exists. Overwrite? [yes/no]')
-        if response.lower() == 'no':
+        if confirm_overwrite('data/'+dataset_name) == False:
+            print "quitting process_photos"
             return
-        elif response.lower() == 'yes':
-            pass
-        else:
-            print 'yes or no required - aborting'
-            return
+        else: pass
+
     else:
+        print 'Creating Directory: data/'+dataset_name
         makedirs('data/'+dataset_name)
 
     path_to = path_dict(dataset_name, photo_dir)
@@ -103,17 +111,28 @@ def load_df(dataset_name):
 class ImageProcessor(object):
     """docstring for ImageProcessor"""
 
-    def __init__(self, photo_dir, dataset_name = 'Wildlife_ID_Data'):
+    def __init__(self, photo_dir = None, dataset_name = 'Wildlife_ID_Data'):
         self.photos = photo_dir
         self.dataset = _make_path('')
         self.json = _make_path('raw_metadata.json')
         self.csv = _make_path('metadata.csv')
         self.features = _make_path('features')
-        self.info = _make_path(info.txt)
+        self.info = _make_path('info.txt')
+        self.graph = None
 
 
     def _make_path(self, target):
         return "data/{}/{}".format(dataset_name, target)
+
+    def create_graph():
+        model_dir = '../imagenet'
+
+        with gfile.FastGFile(os.path.join(
+            model_dir, 'classify_image_graph_def.pb'), 'rb') as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
+            _ = tf.import_graph_def(graph_def, name='')
+
 
     def record_info():
         #TODO: record file structure/location of data for the give IP object
