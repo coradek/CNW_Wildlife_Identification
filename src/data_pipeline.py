@@ -74,7 +74,7 @@ def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
 
     if isdir('data/'+dataset_name):
         if confirm_overwrite('data/'+dataset_name) == False:
-            print "quitting process_photos"
+            print "aborting process_photos"
             return
         else: pass
 
@@ -100,7 +100,7 @@ def process_photos(photo_dir, dataset_name = 'Wildlife_ID_Data'):
     # return df
 
 
-# loads a dataframe with only
+# loads a dataframe with only features and
 def load_df(dataset_name):
     path_to = path_dict(dataset_name)
     df = fe.feature_df(path_to['csv'], path_to['features'])
@@ -113,32 +113,79 @@ class ImageProcessor(object):
 
     def __init__(self, photo_dir = None, dataset_name = 'Wildlife_ID_Data'):
         self.photos = photo_dir
-        self.dataset = _make_path('')
-        self.json = _make_path('raw_metadata.json')
-        self.csv = _make_path('metadata.csv')
-        self.features = _make_path('features')
-        self.info = _make_path('info.txt')
-        self.graph = None
+        self.data_name = dataset_name
+        self.data_path = self._make_path('')
+        self.json = self._make_path('raw_metadata.json')
+        self.csv = self._make_path('metadata.csv')
+        self.features = self._make_path('features')
+        self.info = self._make_path('info.txt')
 
 
     def _make_path(self, target):
-        return "data/{}/{}".format(dataset_name, target)
-
-    def create_graph():
-        model_dir = '../imagenet'
-
-        with gfile.FastGFile(os.path.join(
-            model_dir, 'classify_image_graph_def.pb'), 'rb') as f:
-            graph_def = tf.GraphDef()
-            graph_def.ParseFromString(f.read())
-            _ = tf.import_graph_def(graph_def, name='')
+        return "data/{}/{}".format(self.data_name, target)
 
 
-    def record_info():
-        #TODO: record file structure/location of data for the give IP object
-        pass
+    def record_info(self):
+        #TODO: add date created
+        info = 'Data Set Name: '+self.data_name
+                +'\n\tdataset loc: '+self.data_path
+                +'\n\tsource photos: '+self.photos
+                +'\n\tjson data: '+self.json
+                +'\n\tdataframe csv: '+self.csv
+
+        with open(self.info,'w') as outf:
+            outf.write(info)
+
+    def create_json(self):
+        mdh.build_json_database(self.photos, self.json)
+        print '\ndata pipeline created: {}\n'\
+                .format(self.json)
 
 
+    def create_dataframe(self):
+
+        '''Takes a directory of photos. Returns a dataframe of photo metadata.
+        Stores data in raw json and csv form.
+        Usage:
+        df = IP.create_dataframe(photo_dir)
+        df can then be customized according to the needs of the individual dataset
+        '''
+
+
+        print '\ndata pipeline created: {}\n'\
+                .format(self.csv)
+
+        df = cdb.create_csv(self.json, self.csv)
+        return df
+
+
+    def process_photos(self):
+
+        if isdir(self.dataset):
+            if confirm_overwrite(self.dataset) == False:
+                print "aborting process_photos"
+                return
+            else: pass
+
+        else:
+            print 'Creating Directory: '+self.dataset
+            makedirs(self.dataset)
+
+        print "\ndata pipeline: fetching  photo metadata, creating pandas database and csv . . .\n"
+
+        df =  self.create_dataframe(self.photos, self.data_name)
+        print "\ndata pipeline: extracting features . . .\n"
+
+        #TODO: is it better to import pandas here and just pass
+        #  df.file_path to fe ?
+
+        features = fe.extract_features(df,
+                                save_loc = self.features)
+        print "\ndata pipeline: photo processing complete!\n"
+
+        df = fe.feature_df(df, features)
+
+        # return df
 
 if __name__ == '__main__':
 
