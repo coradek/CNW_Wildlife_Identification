@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+import cPickle as pickle
 import sklearn
 from sklearn.svm import SVC, LinearSVC
 from sklearn.model_selection import train_test_split
@@ -115,6 +115,7 @@ def run_fit(model, X, y, test_size = 0.2):
     return model, X_test, y_test, y_pred, y_prob
 
 
-def save_model(model, path_name):
-    with open(path_name, 'wb') as handle:
+def save_model(model, model_name):
+    model_path = 'data/'+model_name+'.pkl'
+    with open(model_path, 'wb') as handle:
         pickle.dump(model, handle)
