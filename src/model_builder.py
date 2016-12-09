@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 
@@ -7,7 +6,7 @@ from sklearn.svm import SVC, LinearSVC
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 
-import src.data_pipeline as dpl
+from src.data_pipeline import DataManager as DM
 
 '''
 sorts keyword labels into categories
@@ -24,7 +23,8 @@ save_model(model, 'data/my_svm')
 
 def prep_data(dataset, drop_hare = True, drop_blank = False):
     # open dataframe of labels and features
-    df = dpl.load_df(dataset)
+
+    df = DM(dataset_name= dataset).feature_df()
 
     # build categories
     d1 = {'Ungulate':["[u'mule deer']", "[u'White-tailed deer']", "[u'elk']"],

@@ -8,8 +8,6 @@ import cPickle as pickle
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import cross_val_score
 
-import src.data_pipeline as dpl
-
 
 # confusion matrix report
 def cm_report(L, y_test, y_pred):
