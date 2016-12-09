@@ -109,7 +109,8 @@ def load_df(dataset_name):
 
 #TODO:  convert dpl to class
 class ImageProcessor(object):
-    """docstring for ImageProcessor"""
+    """ImageProcessor takes a directory of photos and/or a data set name
+    IP.process_photos() creates json file, csv and inception-v3 features"""
 
     def __init__(self, photo_dir = None, dataset_name = 'Wildlife_ID_Data'):
         self.photos = photo_dir
@@ -127,15 +128,18 @@ class ImageProcessor(object):
 
     def record_info(self):
         #TODO: add date created
-        info = 'Data Set Name: '+self.data_name
-                +'\n\tdataset loc: '+self.data_path
-                +'\n\tsource photos: '+self.photos
-                +'\n\tjson data: '+self.json
-                +'\n\tdataframe csv: '+self.csv
+        info = 'Data Set Name: '+self.data_name\
+                +'\n\tdataset loc: '+self.data_path\
+                +'\n\tsource photos: '+self.photos\
+                +'\n\tjson data: '+self.json\
+                +'\n\tdataframe csv: '+self.csv\
 
         with open(self.info,'w') as outf:
             outf.write(info)
 
+
+#TODO: now that I've pulled out these three functions they look kinda silly
+#  Why wrap a function I built elsewhere + one line of text
     def create_json(self):
         mdh.build_json_database(self.photos, self.json)
         print '\ndata pipeline created: {}\n'\
@@ -143,54 +147,53 @@ class ImageProcessor(object):
 
 
     def create_dataframe(self):
-
-        '''Takes a directory of photos. Returns a dataframe of photo metadata.
-        Stores data in raw json and csv form.
-        Usage:
-        df = IP.create_dataframe(photo_dir)
-        df can then be customized according to the needs of the individual dataset
-        '''
-
-
+        df = cdb.create_csv(self.json, self.csv)
         print '\ndata pipeline created: {}\n'\
                 .format(self.csv)
+        return df
 
-        df = cdb.create_csv(self.json, self.csv)
+
+    def feature_df(dataset_name):
+        '''Returns a dataframe of filenames and tensorflow features
+        '''
+        df = fe.feature_df(self.csv, self.features)
         return df
 
 
     def process_photos(self):
 
-        if isdir(self.dataset):
-            if confirm_overwrite(self.dataset) == False:
+        if isdir(self.data_path):
+            if confirm_overwrite(self.data_path) == False:
                 print "aborting process_photos"
                 return
             else: pass
 
         else:
-            print 'Creating Directory: '+self.dataset
-            makedirs(self.dataset)
+            print 'Creating Directory: '+self.data_path
+            makedirs(self.data_path)
 
         print "\ndata pipeline: fetching  photo metadata, creating pandas database and csv . . .\n"
 
-        df =  self.create_dataframe(self.photos, self.data_name)
+        self.record_info()
+
+        self.create_json()
+
+        df =  self.create_dataframe()
+
         print "\ndata pipeline: extracting features . . .\n"
-
-        #TODO: is it better to import pandas here and just pass
-        #  df.file_path to fe ?
-
         features = fe.extract_features(df,
                                 save_loc = self.features)
-        print "\ndata pipeline: photo processing complete!\n"
 
+        print "\ndata pipeline: photo processing complete!\n"
         df = fe.feature_df(df, features)
 
-        # return df
+        return df
+
 
 if __name__ == '__main__':
 
-    if argv[2]:
-        process_photos(argv[1], dataset_name = argv[2])
+    if len(argv)==3:
+        ImageProcessor(photo_dir = argv[1], dataset_name = argv[2]).process_photos()
 
     else:
-        process_photos(argv[1])
+        ImageProcessor(photo_dir = argv[1]).process_photos()
