@@ -1,3 +1,4 @@
+
 from __future__ import division
 
 import numpy as np
@@ -7,8 +8,6 @@ import cPickle as pickle
 
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import cross_val_score
-
-import src.data_pipeline as dpl
 
 
 def cm_report(L, y_test, y_pred):
@@ -73,7 +72,7 @@ def plot_probs(probs, save_as = None):
 
     plt.show()
     return to_plot
-    
+
 
 def plot_matrix(matrix, y_test, y_pred, save_as = None):
 
