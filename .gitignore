@@ -1,6 +1,6 @@
 first_sample/
 data/
-!data/misty_deer.JPG
+! data/misty_deer.JPG
 metastore_db/
 .ipynb_checkpoints/
 *.pyc
