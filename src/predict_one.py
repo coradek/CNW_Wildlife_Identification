@@ -3,7 +3,7 @@ import src.feature_extractor as fe
 
 
 # Predict animal
-def predict(image, model = 'data/current_model'):
+def predict(image, model = 'data/current_model.pkl'):
 
     X = fe.extract_features([image])
 

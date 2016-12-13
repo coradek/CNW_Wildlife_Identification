@@ -65,8 +65,8 @@ def extract_features(in_item, save_loc = None):
 # create df with tensorflow features, keywords, and file paths
 # for use in data_pipline.load_df()
 def feature_df(df, arr):
-    # take path or df/np.array object
-    # return df with features column attached
+    # takes file paths (csv, .npy file) or df/np.array object
+    # return df with tensorflow features keywords and filepaths attached
 
     if type(arr) == str:
         ftrs = np.load(arr)
