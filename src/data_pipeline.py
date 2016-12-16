@@ -20,7 +20,7 @@ def confirm_overwrite(path):
 class DataManager(object):
     """DataManager provides an interface to the project dataset
     It allows dataset creation through the process_photos()
-    and loading of relevant dataframes"""
+    and loading of datasets which already exist"""
 
     def __init__(self, photo_dir = None, dataset_name = 'Wildlife_ID_Data'):
         self.photos = photo_dir
@@ -48,7 +48,7 @@ class DataManager(object):
             outf.write(info)
 
 
-#TODO: now that I've pulled out these two functions they look kinda silly
+    #TODO: now that I've pulled out these two functions they look kinda silly
 #  Why wrap a function I built elsewhere + one line of text
     def create_json(self):
         mdh.build_json_database(self.photos, self.json)
@@ -64,13 +64,14 @@ class DataManager(object):
 
 
     def feature_df(self):
-        '''Returns a dataframe of filenames and tensorflow features
-        '''
+        '''Returns a dataframe of filenames and tensorflow features'''
         df = fe.feature_df(self.csv, self.features)
         return df
 
 
     def process_photos(self):
+        '''Retrieves metadata from all images in a directory or nested directory of photos.
+        Also creates record of dataset structure; creates json file, csv, and numpy array of Inception-v3 features.'''
 
         if isdir(self.data_path):
             if confirm_overwrite(self.data_path) == False:

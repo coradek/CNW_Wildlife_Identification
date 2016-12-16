@@ -9,10 +9,13 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import cross_val_score
 
 
-# confusion matrix report
-def cm_report(L, y_test, y_pred):
 
-    groups = sorted(L.value_counts().index)
+def cm_report(labels, y_test, y_pred):
+    '''Confusion Matrix Report takes a list of labels for the training set, a test set, and  test set predictions;
+    prints a report on value counts and classification percentages
+    returns the confusion matrix and 'percentage' matrix'''
+
+    groups = sorted(labels.value_counts().index)
     cm = confusion_matrix(y_test,y_pred, labels = groups)
     alphabetized_counts = np.array([[y_test.value_counts().get(group, default = 0) for group in groups]])
 
@@ -20,7 +23,7 @@ def cm_report(L, y_test, y_pred):
     percent_matrix = percent_matrix.round(decimals = 2)
     percent_matrix = np.nan_to_num(percent_matrix)
 
-    print "Total value counts: \n",L.value_counts()
+    print "Total value counts: \n",labels.value_counts()
     print "\nTest set value counts:\n",y_test.value_counts()
     print "\n"
     for i, grp in enumerate(groups):
@@ -33,8 +36,7 @@ def cm_report(L, y_test, y_pred):
 
 
 def eval_model(model, X_test, y_test):
-    # Modify for web app (or create new function)
-    # to predict one photo
+    '''prints a variety of performance metrics for a griven model'''
     def crossval(score_type):
         try: score = cross_val_score(model, X_test, y_test,
                             cv = 5, scoring= score_type)
@@ -49,6 +51,7 @@ def eval_model(model, X_test, y_test):
 
 
 def plot_probs(probs, save_as = None):
+    '''plot 'probability' that a given image is in each category'''
 
     # create ordered DataFrame of categories and probabilities
     groups = ['Canine', 'Feline', 'Other', 'Small', 'Ungulate']

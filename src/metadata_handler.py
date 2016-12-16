@@ -7,13 +7,12 @@ import boto3
 
 '''
 Process nested directories of photos:
-create list of metadata fields
-collect metadata from all photos
-write to json database
+Create list of metadata fields
+Collect metadata from all photos
+Write to json database
 '''
 
-# Transform these functions to class (mdh.local)
-# Refactor to use mongoDB for greater stability
+#TODO: Refactor to use mongoDB for greater stability
 #   if build_json_database fails partway through
 #   could end up with broken json file
 
@@ -21,14 +20,7 @@ def get_fields(directory):
 
     ''' Find relevant metadata fields:
     walk directories and add numeric keys for
-    non-empty meta data fields to field set '''
-
-    # Was also curious to see which fields were occupied
-
-    ## strip '/' only if it is at the end
-    #  otherwise it may mess with nested dirs
-    #  (e.g. sample/photo/set)
-    # directory = directory.strip('/')
+    non-empty meta data fields to field set'''
 
     field_set = set()
     for p, dirs, files in os.walk(directory):
@@ -44,13 +36,12 @@ def get_fields(directory):
 def build_dictionary(photo, field_set = None, source = 'local'):
     '''
     Get one photo's metadata as a dictionary.
-    * Provide field_set to add entries
-    for fields found in other photos
+        Provide field_set to add 'None' entries
+        for fields found only in other photos
     '''
 
     dd = {}
 
-    # FIXME: file_path not applicable when downloading photo from S3
     if source == 'local':
         dd['file_path'] = photo
 
@@ -68,21 +59,20 @@ def build_dictionary(photo, field_set = None, source = 'local'):
     return dd
 
 
-# write metadata dict to JSON
-def Mdata_to_json(photo, outfile, k, with_comma = False):
-    '''Turn metadata python dictionary to json'''
+def Mdata_to_json(photo, outfile, write_append, with_comma = False):
+    '''Convert metadata python dictionary to json'''
     ## add error "please specify write ('w')
     #  or append ('a')" if k is not 'a' or 'w':
 
     M_dict = build_dictionary(photo)
-    with open(outfile, k) as outf:
+    with open(outfile, write_append) as outf:
         json.dump(M_dict, outf, indent = 4)
         if with_comma:
             outf.write(',')
 
+
 # feed metadata into json file
 def build_json_database(directory, f_name):
-    # build in warning incase f_name already exists?
     '''
     Returns json database of metadata for
     all photos in the given directory
@@ -94,7 +84,7 @@ def build_json_database(directory, f_name):
     # which, conveniently, is what happens when using data_pipeline.py
     model_path = f_name[:-17]
 
-    # Open json file
+    # Open json file, open json list
     with open(f_name,'w') as outf:
         outf.write('[')
 
@@ -111,11 +101,13 @@ def build_json_database(directory, f_name):
                 except:
                     failed_list.append(p+'/'+ff)
                 print count-(count%10)
+
     # Close json list
     with open(f_name,'a') as outf:
         outf.seek(-1, os.SEEK_END)
         outf.truncate()
         outf.write(']')
+
     print len(failed_list), "photos failed to process"
     with open(model_path + '/fail_log.txt', 'w') as fail_log:
         for item in failed_list:
@@ -146,13 +138,16 @@ class aws(object):
 
 
     # Replace with mdata_to_MongoDB
-    def Mdata_to_mongo(self, photo, outfile, k):
+    def Mdata_to_mongo(self, photo, outfile, write_append):
         '''Turn metadata python dictionary to json'''
         ## add error "please specify write ('w')
         #  or append ('a')" if k is not 'a' or 'w':
-        M_dict = self.build_dictionary(photo)
-        with open(outfile, k) as outf:
-            json.dump(M_dict, outf, indent = 4)
+
+        # M_dict = self.build_dictionary(photo)
+        # with open(outfile, write_append) as outf:
+        #     json.dump(M_dict, outf, indent = 4)
+
+        pass
 
 
     # rework to take advantage of S3
