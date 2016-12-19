@@ -56,6 +56,6 @@ I expect that taking backgrounds into account through motion capture will help s
 
 ## __Deployment__
 
-Checkout the Web App at [evanadkins.tech](www.evanadkins.tech)! This app allows the user to upload a photo and receive a prediction from the model. Because your photos are likely not from the same location, the results are often entertaining!
+Checkout the Web App at [evanadkins.tech](http://www.evanadkins.tech)! This app allows the user to upload a photo and receive a prediction from the model. Because your photos are likely not from the same location, the results are often entertaining!
 
 The eventual plan is to build this system into an app that will allow volunteers with CWMP to upload and entire directory and receive predictions. Predictions could then be used to flag false triggers, and suggest event grouping.

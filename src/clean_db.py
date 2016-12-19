@@ -12,6 +12,7 @@ Return cleaned dataframe for use in model_builder
 cmd terminal usage: clean_db.py <raw_database.json> <destination.csv>
 '''
 
+
 def fix_col_names(db):
     '''Remove " ", "-", "/" from colunm names'''
 
@@ -23,21 +24,23 @@ def fix_col_names(db):
         new_col = new_col.replace('/', '_')
         if new_col != col:
             dd[col] = new_col
-    db = db.rename(columns = dd)
+    db = db.rename(columns=dd)
     return db
+
 
 def _fix_date(date):
     '''Use regex to reformat dates'''
-    #TODO: not working as intended
+    # TODO: not working as intended
     date = str(date)
     if date == 'nan':
         return None
     else:
         return re.sub('(....)(..)(..)(..)', '\\1-\\2-\\3', date)
 
+
 def _fix_time(time):
     '''Use regex to reformat dates'''
-    #TODO: not working as intended
+    # TODO: not working as intended
     time = str(time)
     if time == 'nan':
         return None
@@ -61,8 +64,8 @@ def fix_date_and_time(db):
 #  add dummies from keywords column
 def add_dummies(db):
     '''Create dummies for Keyword Values'''
-    db = pd.concat([db, db.keywords.str.join(sep = ' ')\
-                            .str.get_dummies(sep=',')], axis=1)
+    db = pd.concat([db, db.keywords.str.join(sep=' ')
+                    .str.get_dummies(sep=',')], axis=1)
     return db
 
 
@@ -75,11 +78,13 @@ def process_data(file_name):
 
     return db
 
+
 def create_csv(raw_json, dest_csv):
     '''Process data and save to csv'''
     df = process_data(raw_json)
     df.to_csv(dest_csv)
     return df
+
 
 if __name__ == '__main__':
 
