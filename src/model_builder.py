@@ -80,7 +80,7 @@ def prep_data(dataset, drop_hare = True, drop_blank = False):
 
 # create SVC model
 def create_SVC():
-
+    # These are mostly default values, included for ease of experimentation
     svm = SVC(C=1.0, kernel='linear', degree=3, gamma='auto',
                  coef0=0.0, shrinking=True, probability=True,
                  tol=0.001, cache_size=200, class_weight=None,

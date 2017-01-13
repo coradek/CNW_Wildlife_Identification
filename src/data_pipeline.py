@@ -71,11 +71,10 @@ class DataManager(object):
            csv, and numpy array of Inception-v3 features.'''
 
         if isdir(self.data_path):
-            if confirm_overwrite(self.data_path) is False:
+            if not confirm_overwrite(self.data_path):
                 print "aborting process_photos"
                 return
-            else:
-                pass
+
 
         else:
             print 'Creating Directory: '+self.data_path

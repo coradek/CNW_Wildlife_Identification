@@ -17,6 +17,7 @@ def predict(image, model = 'current_model'):
         probs = model.predict_proba(X)
         print 'prediction prepared'
         return prediction, probs
+    # if model does not have predict_proba - pass
     except AttributeError:
         pass
 

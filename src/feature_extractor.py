@@ -12,6 +12,7 @@ import cPickle as pickle
 
 
 def create_graph():
+    # (confirm) creates .pb graph file in imagenet directory
     model_dir = 'imagenet'
     with gfile.FastGFile(os.path.join(
             model_dir, 'classify_image_graph_def.pb'), 'rb') as f:
@@ -28,6 +29,7 @@ def extract_features(in_item, save_loc=None):
     # TODO: improve saving
     # check if features.npy exists
     # if exists (and is the same photo set) pickup from end
+    # consider putting into mongoDB?
 
     # add functionality for list of photos
     if type(in_item) == list:

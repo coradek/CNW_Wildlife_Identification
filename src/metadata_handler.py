@@ -95,13 +95,14 @@ def build_json_database(directory, f_name):
     for p, dirs, files in os.walk(directory):
         for ff in files:
             if ff[-4:].upper() == '.JPG':
-                count += 1
                 # Add metadata to json file
                 try:
                     Mdata_to_json(p+'/'+ff, f_name, 'a', with_comma=True)
                 except:
                     failed_list.append(p+'/'+ff)
-                print count-(count % 10)
+                count += 1
+                if count % 100 == 0:
+                    print "processing photo ", count
 
     # Close json list
     with open(f_name, 'a') as outf:
