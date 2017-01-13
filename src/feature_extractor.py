@@ -7,25 +7,27 @@ import numpy as np
 import pandas as pd
 import cPickle as pickle
 
-"""Credit: KERNIX blog - Image classification with a pre-trained deep neural network"""
+"""Credit: KERNIX blog - Image classification
+    with a pre-trained deep neural network"""
+
 
 def create_graph():
     model_dir = 'imagenet'
     with gfile.FastGFile(os.path.join(
-        model_dir, 'classify_image_graph_def.pb'), 'rb') as f:
+            model_dir, 'classify_image_graph_def.pb'), 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
 
 
-def extract_features(in_item, save_loc = None):
+def extract_features(in_item, save_loc=None):
     '''take list of image file paths or pandas df with file_path column
     return pandas series of features
     (optional save as .npy file to save_loc)'''
 
-        # TODO: improve saving
-        # check if features.npy exists
-        # if exists (and is the same photo set) pickup from end
+    # TODO: improve saving
+    # check if features.npy exists
+    # if exists (and is the same photo set) pickup from end
 
     # add functionality for list of photos
     if type(in_item) == list:
@@ -35,7 +37,7 @@ def extract_features(in_item, save_loc = None):
         list_images = in_item.file_path
 
     nb_features = 2048
-    features = np.empty((len(list_images),nb_features))
+    features = np.empty((len(list_images), nb_features))
 
     create_graph()
 
@@ -44,7 +46,7 @@ def extract_features(in_item, save_loc = None):
         next_to_last_tensor = sess.graph.get_tensor_by_name('pool_3:0')
 
         for ind, image in enumerate(list_images):
-            if (ind%100 == 0):
+            if (ind % 100 == 0):
                 print('Processing %s...' % (image))
                 # Save periodically
                 if save_loc:
@@ -55,10 +57,11 @@ def extract_features(in_item, save_loc = None):
             image_data = gfile.FastGFile(image, 'rb').read()
 
             predictions = sess.run(next_to_last_tensor,
-                                {'DecodeJpeg/contents:0': image_data})
-            features[ind,:] = np.squeeze(predictions)
+                                    {'DecodeJpeg/contents:0': image_data})
+            features[ind, :] = np.squeeze(predictions)
 
-    if save_loc: np.save(save_loc, features)
+    if save_loc is not None:
+        np.save(save_loc, features)
     return features
 
 

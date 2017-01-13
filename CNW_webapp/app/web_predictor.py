@@ -1,5 +1,6 @@
 import os
 import re
+from PIL import Image
 import tensorflow as tf
 import tensorflow.python.platform
 from tensorflow.python.platform import gfile
@@ -42,6 +43,13 @@ def setup():
 # Return Feature Vector formatted for use in Predict
 def get_features(image, sess, next_to_last_tensor):
 
+    # convert non .jpg images to .jpg
+    if image[:-4] is not '.jpg':
+        new_name = ''.join(image.split('.')[:-1]) + '.jpg'
+        im = Image.open(image)
+        im.save(new_name)
+        image = new_name
+
     if not gfile.Exists(image):
         tf.logging.fatal('File does not exist %s', image)
 
@@ -67,6 +75,7 @@ def predict(feat, model = 'current_model'):
     try:
         probs = model.predict_proba(feat)
         return prediction, probs
+    # if model does not have predict_proba - pass
     except AttributeError:
         pass
 
