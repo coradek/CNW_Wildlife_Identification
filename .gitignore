@@ -5,6 +5,8 @@ metastore_db/
 *.pyc
 
 CNW_webapp/app/static/img/
+! CNW_webapp/app/static/img/ea_intro.jpg
+! CNW_webapp/app/static/img/IDapp.jpg
 CNW_webapp/app/static/tmp/
 ! CNW_webapp/app/static/tmp/bunny.JPG
 
