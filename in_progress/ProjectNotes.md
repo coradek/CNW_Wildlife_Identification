@@ -242,6 +242,36 @@ https://www.hover.com/domain/evanadkins.tech/dns
 change @ record to my EC2 elastic IP
 make new record www with my EC2 elastic IP
 
+
+
+bash Anaconda2-4.2.0-Linux-x86_64.sh
+vim .bashrc
+
+sudo apt-get update
+sudo apt-get install nginx
+sudo apt-get install uwsgi
+
+git clone https://github.com/coradek/CNW_Wildlife_Identification
+conda install -c conda-forge tensorflow
+conda install PyQt=4
+
+cd /etc/nginx/sites-available
+sudo ln -s /etc/nginx/sites-available/app
+
+cd /etc/uwsgi/apps-enabled
+ls
+sudo vim app.ini
+
+tail /var/log/nginx/access.log
+sudo vim /etc/nginx/sites-enabled/app
+sudo vim /etc/nginx/nginx.conf
+sudo service nginx restart
+
+
+sudo less /var/log/uwsgi/app/app.log
+sudo less /var/log/uwsgi/app/app.log.1
+sudo service uwsgi restart
+
 # __opencv__
 
 install:

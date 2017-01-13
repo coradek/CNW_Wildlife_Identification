@@ -6,9 +6,9 @@ This project aims to classify wildlife in images from the Conservation Northwest
 Conservation Northwest (CNW) is a non-profit land conservation organization dedicated to protecting and conserving wild lands from the Washington Coast to the BC Rockies. One of CNW's ongoing efforts is the Citizen Wildlife Monitoring Project (CWMP), organizing citizen-scientist volunteers to monitor and document wildlife using remote cameras where state and federal agencies do not have the resources to go.
 The CWMP is now in its tenth year. The project depends largely on volunteers, not only to maintain and monitor the cameras, but also to manually sort and categorize hundreds of thousands of resulting photos - many of which do not contain any animal and must be removed from the database.
 Image recognition, and machine learning technologies provide a significant opportunity for streamlining volunteer efforts and improving the consistency of the resultant data. Images from 2015 and 2014 have already been categorized by hand, and are available for use in model training. Images from seven previous years (2007 - 2013) and from the current field season (2016) have yet to be analyzed, so an automated system would be of immediate benefit to the organization.
-The ideal system will automate three tasks
+The ideal system will automate three tasks:
 - Remove of 'False Triggers' - images with no animal.
-- Group photos into ‘Events' - multiple images of the same animal around the same time
+- Group photos into ‘Events' - multiple images of the same animal around the same time.
 - Identify which species are present in each photo.
 
 This project begins with the identification of species because false triggers have already been removed from the initial dataset manually, and event classification data is not included in the initial dataset.
@@ -26,10 +26,10 @@ Data preparation required some effort. Directory naming across the 2015 image se
 
 ## __Modeling__
 In the current phase of modeling, a Support Vector Machine (SVM) is applied to features extracted from TensorFlow's pre-trained convolutional neural network, Inception-v3. For the first phase, animal species have been grouped into five categories:
-- Canine (coyote, wolf, and domestic dog)
-- Feline (bobcat, lynx, cougar)
-- Ungulate (deer, elk, moose)
-- Small (squirrels, birds, mice, weasels)
+- Canine (coyote, wolf, and domestic dog),
+- Feline (bobcat, lynx, cougar),
+- Ungulate (deer, elk, moose),
+- Small (squirrels, birds, mice, weasels),
 - Other (humans, bear, skunk, wolverine, marmot).
 
 Snow-shoe Hares were a very unbalanced group, and posed a particular challenge to the model (being a small white animal on a snowy background) and so were removed from the training set.
