@@ -106,16 +106,19 @@
     <section id="download" class="content-section text-center">
         <div class="download-section">
             <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
+                <div class="col-lg-6 col-lg-offset-4">
                     <h2>Identification Web app</h2>
                     <br>
 		                <p>IDENTIFY YOUR OWN IMAGES!</p>
 		                <br>
-                    <p>The web app is intended primarily for proof of concept and entertainment. Because the initial model was trained on a very small set of backgrounds, it is imprecise on general photos. You have been warned!</p>
-                    <p>Still, as long as the animal is unobscured, decent predictions can still be obtained.</p>
-                    <p>The identification web app is very much a work in progress. If the image you upload causes an error, please let me know!</p>
+                    <p>The web app is intended as a proof of concept and entertainment. Because the initial model was trained on a very small set of backgrounds, it is imprecise on general photos. <strong>You have been warned!</strong> Clear images of species seen during model training work best - coyote, bobcat, elk. Your family dog may come back classified as an Ungulate. Have fun and let me know what you think.</p>
                     <br>
-                    <a href="/upload" class="btn btn-default btn-lg">Classify an Image!</a>
+                    <form action = "/uploader" method = "POST"
+                        enctype = "multipart/form-data">
+                        <input type = "file" name = "file" class="btn btn-default btn-lg">
+                        <br>
+                        <input type = "submit" class="btn btn-default btn-lg">
+                    </form>
                 </div>
             </div>
         </div>
