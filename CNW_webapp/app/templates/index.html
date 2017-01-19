@@ -61,6 +61,9 @@
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
                     </li>
+                    <li>
+                        <a class="page-scroll" href="http://evanadkins.tech/">evanadkins.tech</a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -90,7 +93,14 @@
     <section id="about" class="container content-section text-center">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <h1>What it does:</h1>
+                <h1>About the Project:</h1>
+
+                <p>This application serves as a proof of concept for the feasability of using machine learning to assist volunteers for the Conservation Northwest Wildlife Monitoring Project with the identification of animals in remote camera images.
+                </p>
+                <p>If successful, a similar model could be applied to detecting "false triggers" - images with no animal. Automatically flagging or removing false triggers from project photo sets has the potential to save the organization hundreds of volunteer hours every year!
+                </p>
+
+                <h1>What it Does:</h1>
 
                 <p>The Wildlife Identification Web app will identify photos you upload! Based on images it has already seen, the model places photos into one of five categories: Canine, Feline, Ungulate (deer, elk), Small, and Other (Human, Bear, Wolverine, ect.).
                 </p>
@@ -111,7 +121,9 @@
                     <br>
 		                <p>IDENTIFY YOUR OWN IMAGES!</p>
 		                <br>
-                    <p>The web app is intended as a proof of concept and entertainment. Because the initial model was trained on a very small set of backgrounds, it is imprecise on general photos. <strong>You have been warned!</strong> Clear images of species seen during model training work best - coyote, bobcat, elk. Your family dog may come back classified as an Ungulate. Have fun and let me know what you think.</p>
+                    <p>The web app is intended for proof of concept and entertainment. Because the initial model was trained on a very small set of backgrounds, it is imprecise on general photos.</p>
+                    <h4>You have been warned!</h4>
+                    <p>Clear images of species seen during model training work best - coyote, bobcat, elk, and such. Your family dog may come back classified as an Ungulate. Have fun and let me know what you think.</p>
                     <br>
                     <form action = "/uploader" method = "POST"
                         enctype = "multipart/form-data">
@@ -134,6 +146,14 @@
                 </p>
                 <ul class="list-inline banner-social-buttons">
                   <!-- add link to linkedin? anything else?-->
+                    <li>
+                      <a href="mailto:evan.wildlife.id@gmail.com" class="btn btn-default btn-lg"><i class="fa fa-google fa-fw"></i> <span class="network-name">evan.wildlife.id@gmail.com</span></a>
+                    </li>
+                    <li>
+                      <a href="http://evanadkins.tech/" class="btn btn-default btn-lg"><i class="fa fa-gear fa-fw"></i> <span class="network-name">evanadkins.tech</span></a>
+                    </li>
+                    <br>
+                    <br>
                     <li>
                         <a href="https://github.com/coradek/CNW_Wildlife_Identification" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">See This Project on Github</span></a>
                     </li>
