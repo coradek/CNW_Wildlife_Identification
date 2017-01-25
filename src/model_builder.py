@@ -107,7 +107,7 @@ def create_RF():
 # Train model. return model, prediction, probs
 #  and unused portion of dataset
 def run_fit(model, X, y, test_size=0.2):
-    X_train, X_test, y_train, y_test =
+    X_train, X_test, y_train, y_test = \
                 train_test_split(X, y, test_size=test_size, random_state=None)
     model = model.fit(X_train, y_train)
     y_pred = model.predict(X_test)

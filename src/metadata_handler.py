@@ -27,7 +27,8 @@ def get_fields(directory):
     for p, dirs, files in os.walk(directory):
         for ff in files:
             if ff[-4:].upper() == '.JPG':
-                info = IPTCInfo(directory + '/' + ff)
+                file_path = os.path.join(p,ff)
+                info = IPTCInfo(file_path)
                 data_dict = dict(info.data)
                 fields = set(data_dict.keys())
                 field_set = field_set.union(fields)
