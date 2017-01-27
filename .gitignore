@@ -1,5 +1,6 @@
 first_sample/
 data/
+! data/duplicate_list.json
 metastore_db/
 .ipynb_checkpoints/
 *.pyc
