@@ -276,3 +276,7 @@ sudo service uwsgi restart
 
 install:
 `conda install -c menpo opencv=2.4.11`
+
+extra image utilities package:
+(http://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/)
+`pip install imutils`
