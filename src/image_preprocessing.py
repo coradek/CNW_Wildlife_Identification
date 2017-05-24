@@ -22,10 +22,8 @@ def img_diff(img1, img2, threshold = 60):
     return dif
 
 
-
-# TODO: handle first and last images
-#       determine if/how/where to save images for use in tensorflow
-def event_dilate(color_list, threshold=15):
+# TODO: determine if/how/where to save images for use in tensorflow
+def find_overlapping_change(color_list, threshold=15):
     img_list = []          #  Create list of grayed, blurred images
     dilate_kernel = np.ones((100,100),np.uint8)
     processed = []
@@ -34,16 +32,17 @@ def event_dilate(color_list, threshold=15):
         img_list.append(gray_blur(im))
 
     # find common changes between an image and the image to the left and right
-    # TODO: for now ignore first and last image
-    for i, im in enumerate(img_list[1:-1]):
-        # start w/ img_list[1] thus 'i' == index of the previous image
-        prev = img_dif(im, img_list[i], threshold=threshold)
-        post = img_dif(im, img_list[i+2], threshold=threshold)
+    for i, im in enumerate(img_list):
+        # wrapped to the other end to get the ends
+        #  - not the best soln for long events
+        before = (i-1)%len(img_list)
+        after =  (i+1)%len(img_list)
+        prev = getdif(im, img_list[before])
+        post = getdif(im, img_list[after])
         both = cv2.bitwise_and(prev,post)
         both = cv2.dilate(both, dilate_kernel, iterations=2)
-
-        tmp = cv2.cvtColor(both, cv2.COLOR_GRAY2BGR)
-        overlap = cv2.bitwise_and(tmp,color_list[i+1])
+        both = cv2.cvtColor(both, cv2.COLOR_GRAY2RGB)
+        overlap = cv2.bitwise_and(both,color_list[i])
 
         processed.append(overlap)
 

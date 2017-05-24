@@ -46,8 +46,6 @@ class DataManager(object):
         with open(self.info, 'w') as outf:
             outf.write(info)
 
-    # TODO: now that I've pulled out these two functions they look kinda silly
-    #  Why wrap a function I built elsewhere + one line of text
     def create_json(self):
         mdh.build_json_database(self.photos, self.json)
         print '\ndata pipeline created: {}\n'\
@@ -74,8 +72,6 @@ class DataManager(object):
             if not confirm_overwrite(self.data_path):
                 print "aborting process_photos"
                 return
-
-
         else:
             print 'Creating Directory: '+self.data_path
             makedirs(self.data_path)

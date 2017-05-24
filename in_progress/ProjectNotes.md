@@ -35,6 +35,12 @@ run py command
 `python classify_image.py --model_dir <desired model location>/imagenet`
 `python classify_image.py --model_dir ~/coradek/Galvanize_DSI/CNW_Wildlife_Identification/imagenet`
 
+NOTE:
+```
+Jade Tabony [12:50 PM] :
+Hey Evan! Thanks for meeting with me today :)
+Just in case someone ever runs into this problem again, imagenet didn't download for me when I conda installed tensorflow.  I had to git clone the repo here : https://www.tensorflow.org/tutorials/image_recognition
+```
 
 <br>
 # __Connect to EC2__
@@ -271,6 +277,70 @@ sudo service nginx restart
 sudo less /var/log/uwsgi/app/app.log
 sudo less /var/log/uwsgi/app/app.log.1
 sudo service uwsgi restart
+
+
+__simplified steps__
+sudo vim /etc/nginx/sites-enabled/app
+```
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        # set client body size to 2M #
+        client_max_body_size 20M;
+
+        server_name wildlife.evanadkins.tech;
+
+        location /static {
+                alias /home/ubuntu/CNW_Wildlife_Identification/CNW_webapp/app/static;
+                try_files $uri $uri/ =404;
+        }
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                include uwsgi_params;
+                uwsgi_pass 127.0.0.1:3031;
+
+        }
+
+}
+
+server {
+        listen 80;
+
+        server_name evanadkins.tech www.evanadkins.tech;
+
+        root /home/ubuntu/evanadkinsdottech/static;
+        index index.html;
+
+        location /static {
+                alias /home/ubuntu/evanadkinsdottech/static;
+                try_files $uri $uri/ =404;
+        }
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+```
+
+
+
+sudo vim /etc/uwsgi/apps-enabled/app.ini
+```
+[uwsgi]
+processes = 1
+master = false
+socket = 127.0.0.1:3031
+venv = /home/ubuntu/anaconda2
+chdir = /home/ubuntu/CNW_Wildlife_Identification/CNW_webapp
+module = app.app
+callable = app
+stats = 127.0.0.1:9191
+```
+
+
 
 # __opencv__
 
